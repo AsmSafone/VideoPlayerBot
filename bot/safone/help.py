@@ -24,7 +24,7 @@ from pyrogram.errors import MessageNotModified
 
 CHAT_ID = Config.CHAT_ID
 USERNAME = Config.BOT_USERNAME
-HOME_TEXT = "👋🏻 **Hi [{}](tg://user?id={})**,\n\nI'm **Video Player Bot**. \nI Can Stream Videos On Telegram Voice Chat. Made With ❤️ By @AsmSafone 😉!"
+HOME_TEXT = "👋🏻 **Hi [{}](tg://user?id={})**,\n\nI'm **Video Player Bot**. \nI Can Stream Videos On Telegram Voice Chat. Made With ❤️ By @pratheek06 🖤!"
 HELP_TEXT = """
 🏷️ --**Setting Up**-- :
 
@@ -55,12 +55,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
     if query.data=="help":
         buttons = [
             [
-                InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
-                InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
-            ],
-            [
-                InlineKeyboardButton("MORE BOTS", url="https://t.me/AsmSafone/173"),
-                InlineKeyboardButton("SOURCE CODE", url="https://github.com/AsmSafone/VideoPlayerBot"),
+                InlineKeyboardButton("CHANNEL", url="https://t.me/aboutpratheek"),
+                InlineKeyboardButton("SUPPORT", url="https://t.me/SHIZUKA_VC_SUPPORT"),
             ],
             [
                 InlineKeyboardButton("BACK HOME", callback_data="home"),
@@ -84,10 +80,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
                 InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
-            ],
-            [
-                InlineKeyboardButton("MORE BOTS", url="https://t.me/AsmSafone/173"),
-                InlineKeyboardButton("SOURCE CODE", url="https://github.com/AsmSafone/VideoPlayerBot"),
             ],
             [
                 InlineKeyboardButton("CLOSE MENU", callback_data="close"),
@@ -117,12 +109,8 @@ async def start(client, message):
                 InlineKeyboardButton("HOW TO USE", callback_data="help"),
             ],
             [
-                InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
-                InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
-            ],
-            [
-                InlineKeyboardButton("MORE BOTS", url="https://t.me/AsmSafone/173"),
-                InlineKeyboardButton("SOURCE CODE", url="https://github.com/AsmSafone/VideoPlayerBot"),
+                InlineKeyboardButton("CHANNEL", url="https://t.me/aboutpratheek"),
+                InlineKeyboardButton("SUPPORT", url="https://t.me/SHIZUKA_VC_SUPPORT"),
             ],
             [
                 InlineKeyboardButton("CLOSE MENU", callback_data="close"),
@@ -135,12 +123,8 @@ async def start(client, message):
 async def help(client, message):
     buttons = [
             [
-                InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
-                InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
-            ],
-            [
-                InlineKeyboardButton("MORE BOTS", url="https://t.me/AsmSafone/173"),
-                InlineKeyboardButton("SOURCE CODE", url="https://github.com/AsmSafone/VideoPlayerBot"),
+                InlineKeyboardButton("CHANNEL", url="https://t.me/aboutpratheek"),
+                InlineKeyboardButton("SUPPORT", url="https://t.me/SHIZUKA_VC_SUPPORT"),
             ],
             [
                 InlineKeyboardButton("BACK HOME", callback_data="home"),
