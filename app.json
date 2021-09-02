@@ -1,0 +1,67 @@
+{
+    "name": "Telegram Video Player Bot",
+    "description": "An Telegram Bot By @AsmSafone To Stream Videos in Voice Chat",
+    "repository": "https://github.com/AsmSafone/VideoPlayerBot",
+    "logo": "https://telegra.ph/file/9b532dfd6d00e54d1704d.jpg",
+    "stack": "container",
+    "keywords": [
+      "telegram",
+      "voicechat",
+      "bot",
+      "video",
+      "player",
+      "python",
+      "pyrogram",
+      "pytgcalls",
+      "videoplayer"
+    ],
+    "env": {
+      "API_ID": {
+        "description": "User Account Telegram API_ID get it from my.telegram.org/apps",
+        "required": true
+      },
+      "API_HASH": {
+        "description": "User Account Telegram API_HASH get it from my.telegram.org/apps",
+        "required": true
+      },
+      "BOT_TOKEN": {
+        "description": "Your Telegram Bot Token, get it from @Botfather XD",
+        "required": true
+      },
+      "BOT_USERNAME": {
+        "description": "Your Telegram Bot Username without @, get it from @Botfather XD",
+        "required": true
+      },
+      "SESSION_STRING": {
+        "description": "Pyrogram Session String of User Account, get it from @genStr_robot",
+        "required": true
+      },
+      "CHAT_ID": {
+        "description": "ID of your Channel or Group where the bot will works or stream videos",
+        "required": true
+      },
+      "AUTH_USERS": {
+        "description": "ID of Auth Users who can use Admin commands (for multiple users seperated by space)",
+        "required": true
+      },
+      "REPLY_MESSAGE": {
+        "description": "A reply message to those who message the USER account in PM. Make it blank if you do not need this feature.",
+        "value": "Hello Sir, I'm a bot to stream videos on telegram voice chat, not having time to chat with you 😂!",
+        "required": false
+      }
+    },
+    "formation": {
+      "worker": {
+        "quantity": 1,
+        "size": "free"
+      }
+    },
+    "buildpacks": [
+      {
+        "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+      },
+      {
+        "url": "heroku/python"
+      }
+    ]
+  }
