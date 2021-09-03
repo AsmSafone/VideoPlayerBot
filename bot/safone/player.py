@@ -103,7 +103,7 @@ async def mute(_, m: Message):
         await m.reply_text("🤖 **Please Start The Stream First!**")
         return
     try:
-        VIDEO_CALL[CHAT_ID].pause_playout()
+        await VIDEO_CALL[CHAT_ID].set_is_mute(True)
         await m.reply_text("🔇 **Muted Streamer!**")
     except Exception as e:
         await m.reply_text(f"❌ **An Error Occoured!** \n`{e}`")
@@ -115,7 +115,7 @@ async def unmute(_, m: Message):
         await m.reply_text("🤖 **Please Start The Stream First!**")
         return
     try:
-        VIDEO_CALL[CHAT_ID].resume_playout()
+        await VIDEO_CALL[CHAT_ID].set_is_mute(False)
         await m.reply_text("🔉 **Unmuted Streamer!**")
     except Exception as e:
         await m.reply_text(f"❌ **An Error Occoured!** \n`{e}`")

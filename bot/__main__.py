@@ -22,7 +22,6 @@ import asyncio
 from pyrogram import Client, idle
 from config import Config
 from bot.safone.nopm import User
-from pyrogram.raw import functions, types
 
 Bot = Client(
     ":memory:",
