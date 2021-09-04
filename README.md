@@ -72,5 +72,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 ## Credits
 
 - [Me](https://github.com/AsmSafone) for [Noting](https://github.com/AsmSafone/VideoPlayerBot) 😬
+- [Error](https://github.com/AsmSafone) for [This](https://github.com/Sammy-XD/VcVideoPlayer) ❤️
 - [Dan](https://github.com/delivrance) for [Pyrogram](https://github.com/pyrogram/pyrogram) ❤️
 - [MarshalX](https://github.com/MarshalX) for [pytgcalls](https://github.com/MarshalX/tgcalls) ❤️
