@@ -24,13 +24,13 @@ from pyrogram.errors import MessageNotModified
 
 CHAT_ID = Config.CHAT_ID
 USERNAME = Config.BOT_USERNAME
-HOME_TEXT = "👋🏻 **Hi [{}](tg://user?id={})**, \n\nI'm **Video Player Bot**. \nI Can Stream Videos On Telegram Voice Chat From YouTube & Telegram Video Files 😉! \n\n**Made With ❤️ By @ImSafone!** 👑"
+HOME_TEXT = "👋🏻 **Hi [{}](tg://user?id={})**, \n\nI'm **Video Player Bot**. \nI Can Stream Lives, YouTube Videos & Telegram Video Files On Voice Chat of Telegram Channels & Groups 😉! \n\n**Made With ❤️ By @ImSafone!** 👑"
 HELP_TEXT = """
 🏷️ --**Setting Up**-- :
 
 \u2022 Start a voice chat in your channel or group.
 \u2022 Add bot and user account in chat with admin rights.
-\u2022 Use /stream [youtube link] or /stream as a reply to an video file.
+\u2022 Use /stream [youtube link] or /stream [live stream link] or /stream as a reply to an video file.
 
 🏷️ --**Common Commands**-- :
 
@@ -40,8 +40,6 @@ HELP_TEXT = """
 🏷️ --**Admin Only Commands**-- :
 
 \u2022 `/stream` - start streaming the video
-\u2022 `/mute` - mute the user in voice chat
-\u2022 `/unmute` - unmute the user in voice chat
 \u2022 `/endstream` - end current stream & left vc
 
 © **Powered By** : 
