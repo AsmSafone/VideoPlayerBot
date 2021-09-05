@@ -76,7 +76,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data=="home":
         buttons = [
             [
-                InlineKeyboardButton("HOW TO USE", callback_data="help"),
+                InlineKeyboardButton("SEARCH INLINE", switch_inline_query_current_chat=""),
             ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
@@ -87,7 +87,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 InlineKeyboardButton("SOURCE CODE", url="https://github.com/AsmSafone/VideoPlayerBot"),
             ],
             [
-                InlineKeyboardButton("CLOSE MENU", callback_data="close"),
+                InlineKeyboardButton("❔ HOW TO USE ❔", callback_data="help"),
             ]
             ]
         reply_markup = InlineKeyboardMarkup(buttons)
@@ -111,7 +111,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
 async def start(client, message):
     buttons = [
             [
-                InlineKeyboardButton("HOW TO USE", callback_data="help"),
+                InlineKeyboardButton("SEARCH INLINE", switch_inline_query_current_chat=""),
             ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
@@ -122,7 +122,7 @@ async def start(client, message):
                 InlineKeyboardButton("SOURCE CODE", url="https://github.com/AsmSafone/VideoPlayerBot"),
             ],
             [
-                InlineKeyboardButton("CLOSE MENU", callback_data="close"),
+                InlineKeyboardButton("❔ HOW TO USE ❔", callback_data="help"),
             ]
             ]
     reply_markup = InlineKeyboardMarkup(buttons)

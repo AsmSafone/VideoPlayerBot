@@ -81,7 +81,7 @@ async def stream(client, m: Message):
                 await group_call.join(CHAT_ID)
                 await group_call.start_video(ytvid)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [YouTube Streaming]({url})!**")
+                await msg.edit(f"▶️ **Started [YouTube Streaming]({url})!**", disable_web_page_preview=True)
                 try:
                     STREAM.remove(0)
                 except:
@@ -101,7 +101,7 @@ async def stream(client, m: Message):
                 await group_call.join(CHAT_ID)
                 await group_call.start_video(live)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [Live Streaming]({live})!**")
+                await msg.edit(f"▶️ **Started [Live Streaming]({live})!**", disable_web_page_preview=True)
                 try:
                     STREAM.remove(0)
                 except:
