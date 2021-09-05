@@ -14,11 +14,13 @@
 
 An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Telegram Voice Chat.
 
-## Special Features
+## Main Features
 
-- Supports Live Streaming From Link
-- Supports Direct Streaming From YouTube
-- Supports Streaming From Any Video Files
+- Supports Live Streaming
+- Supports YouTube Streaming
+- Supports Live Radio Streaming
+- Supports Video Files Streaming
+- Supports YouTube Live Streaming
 - Customizable Userbot Protection (PM Guard)
 
 ## Deploy Own Bot
@@ -29,15 +31,17 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Tele
 ### Heroku (Don't Complain)
 <p><a href="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
 
-## Commands:
+## Commands (Botfather)
 ```sh
-start - Start The Bot 
+start - Start The Bot
 help - Show Help Message
-stream - Start Streaming
-endstream - End Streaming
+radio - Start Radio Streaming
+stream - Start Video Streaming
+stopradio - Stop Radio Streaming
+endstream - Stop Video Streaming
 ```
 
-## Config Vars:
+## Config Vars
 1. `API_ID` : User Account Telegram API_ID, get it from my.telegram.org
 2. `API_HASH` : User Account Telegram API_HASH, get it from my.telegram.org
 3. `BOT_TOKEN` : Your Telegram Bot Token, get it from @Botfather XD

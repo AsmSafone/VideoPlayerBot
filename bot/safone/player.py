@@ -28,7 +28,6 @@ from bot.safone.nopm import User
 from youtube_dl import YoutubeDL
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pyrogram.errors import FloodWait
 from pytgcalls import GroupCallFactory
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -54,7 +53,7 @@ async def stream(client, m: Message):
 
     media = m.reply_to_message
     if not media and not ' ' in m.text:
-        await m.reply("❗ __Send Me An YouTube Video Link / Live Stream Link / Reply To An Video To Start Streaming!__")
+        await m.reply_text("❗ __Send Me An YouTube Video Link / Live Stream Link / Reply To An Video To Start Streaming!__")
 
     elif ' ' in m.text:
         msg = await m.reply_text("🔄 `Processing ...`")
@@ -72,6 +71,7 @@ async def stream(client, m: Message):
                 ytstream = ytstreamlink
             except Exception as e:
                 await msg.edit(f"❌ **YouTube Download Error!** \n\n`{e}`")
+                print(e)
                 return
             await sleep(2)
             try:
@@ -79,7 +79,7 @@ async def stream(client, m: Message):
                 await group_call.join(CHAT_ID)
                 await group_call.start_video(ytstream)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [YouTube Streaming]({ytstream})!**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [YouTube Streaming]({query})!**", disable_web_page_preview=True)
                 try:
                     STREAM.remove(0)
                 except:
@@ -99,7 +99,7 @@ async def stream(client, m: Message):
                 await group_call.join(CHAT_ID)
                 await group_call.start_video(livestream)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [Live Streaming]({livestream})!**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [Live Streaming]({query})!**", disable_web_page_preview=True)
                 try:
                     STREAM.remove(0)
                 except:
@@ -120,7 +120,7 @@ async def stream(client, m: Message):
             await group_call.join(CHAT_ID)
             await group_call.start_video(video)
             VIDEO_CALL[CHAT_ID] = group_call
-            await msg.edit("▶️ **Started Streaming!**")
+            await msg.edit("▶️ **Started Video Streaming!**")
             try:
                 STREAM.remove(0)
             except:
@@ -139,11 +139,14 @@ async def stream(client, m: Message):
 @Client.on_message(filters.command(["endstream", f"endstream@{USERNAME}"]) & filters.user(ADMINS) & (filters.chat(CHAT_ID) | filters.private))
 async def endstream(client, m: Message):
     if 0 in STREAM:
-        await m.reply_text("🤖 **Please Start The Stream First!**")
+        await m.reply_text("🤖 **Please Start An Stream First!**")
         return
-    try:
+
+    msg = await m.reply_text("🔄 `Processing ...`")
+    if CHAT_ID in VIDEO_CALL:
         await VIDEO_CALL[CHAT_ID].stop()
-        await m.reply_text("⏹️ **Stopped Streaming!**")
+        VIDEO_CALL.pop(CHAT_ID)
+        await msg.edit("⏹️ **Stopped Video Streaming!**")
         try:
             STREAM.remove(1)
         except:
@@ -152,11 +155,11 @@ async def endstream(client, m: Message):
             STREAM.add(0)
         except:
             pass
-    except Exception as e:
-        await m.reply_text(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+    else:
+        await msg.edit("🤖 **Please Start An Stream First!**")
 
 
-admincmds=["stream", "endstream", f"stream@{USERNAME}", f"endstream@{USERNAME}"]
+admincmds=["stream", "radio", "stopradio", "endstream", f"stream@{USERNAME}", f"radio@{USERNAME}", f"stopradio@{USERNAME}", f"endstream@{USERNAME}"]
 
 @Client.on_message(filters.command(admincmds) & ~filters.user(ADMINS) & (filters.chat(CHAT_ID) | filters.private))
 async def notforu(_, m: Message):
