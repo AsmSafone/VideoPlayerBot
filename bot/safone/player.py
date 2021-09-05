@@ -40,12 +40,8 @@ STREAM = {6}
 VIDEO_CALL = {}
 
 ydl_opts = {
-        "format": "best",
-        "addmetadata": True,
         "geo_bypass": True,
         "nocheckcertificate": True,
-        "videoformat": "mp4",
-        "outtmpl": "downloads/%(id)s.%(ext)s",
 }
 ydl = YoutubeDL(ydl_opts)
 group_call_factory = GroupCallFactory(User, GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM)
@@ -58,20 +54,22 @@ async def stream(client, m: Message):
 
     media = m.reply_to_message
     if not media and not ' ' in m.text:
-        await m.reply("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Streaming!__")
+        await m.reply("❗ __Send Me An YouTube Video Link / Live Stream Link / Reply To An Video To Start Streaming!__")
 
     elif ' ' in m.text:
         msg = await m.reply_text("🔄 `Processing ...`")
         text = m.text.split(' ', 1)
-        url = text[1]
+        query = text[1]
         regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
-        match = re.match(regex,url)
+        match = re.match(regex,query)
         if match:
             await msg.edit("🔄 `Starting YouTube Stream ...`")
             try:
-                info = ydl.extract_info(url, False)
-                ydl.download([url])
-                ytvid = path.join("downloads", f"{info['id']}.{info['ext']}")
+                meta = ydl.extract_info(query, download=False)
+                formats = meta.get('formats', [meta])
+                for f in formats:
+                        ytstreamlink = f['url']
+                ytstream = ytstreamlink
             except Exception as e:
                 await msg.edit(f"❌ **YouTube Download Error!** \n\n`{e}`")
                 return
@@ -79,9 +77,9 @@ async def stream(client, m: Message):
             try:
                 group_call = group_call_factory.get_group_call()
                 await group_call.join(CHAT_ID)
-                await group_call.start_video(ytvid)
+                await group_call.start_video(ytstream)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [YouTube Streaming]({url})!**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [YouTube Streaming]({ytstream})!**", disable_web_page_preview=True)
                 try:
                     STREAM.remove(0)
                 except:
@@ -94,14 +92,14 @@ async def stream(client, m: Message):
                 await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
         else:
             await msg.edit("🔄 `Starting Live Stream ...`")
-            live = url
+            livestream = query
             await sleep(2)
             try:
                 group_call = group_call_factory.get_group_call()
                 await group_call.join(CHAT_ID)
-                await group_call.start_video(live)
+                await group_call.start_video(livestream)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [Live Streaming]({live})!**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [Live Streaming]({livestream})!**", disable_web_page_preview=True)
                 try:
                     STREAM.remove(0)
                 except:
