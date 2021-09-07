@@ -37,3 +37,8 @@ class Config:
     else:
         REPLY_MESSAGE = None
     SESSION_STRING = os.environ.get("SESSION_STRING", "")
+
+class Database:
+    VIDEO_CALL = {}
+    RADIO_CALL = {}
+    FFMPEG_PROCESSES = {}

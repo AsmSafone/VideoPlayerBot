@@ -19,7 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 import asyncio
 from config import Config
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from pyrogram.types import Message
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram.errors import MessageNotModified
 
 CHAT_ID = Config.CHAT_ID
@@ -35,13 +36,12 @@ HELP_TEXT = """
 🏷️ --**Common Commands**-- :
 
 \u2022 `/start` - start the bot
-\u2022 `/help` - show the help message
+\u2022 `/help` - show help message
 
 🏷️ --**Admin Only Commands**-- :
 
-\u2022 `/stream` - start streaming the video
 \u2022 `/radio` - start streaming the radio
-\u2022 `/stopradio` - stop streaming the radio
+\u2022 `/stream` - start streaming the video
 \u2022 `/endstream` - stop streaming the video
 
 © **Powered By** : 
