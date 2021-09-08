@@ -42,6 +42,7 @@ FFMPEG_PROCESSES = db.FFMPEG_PROCESSES
 
 
 ydl_opts = {
+        'quiet': True 
         "geo_bypass": True,
         "nocheckcertificate": True,
 }
