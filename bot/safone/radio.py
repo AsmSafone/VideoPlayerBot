@@ -9,11 +9,11 @@ from signal import SIGINT
 from config import Config, db
 from pyrogram import Client, filters
 from pyrogram.types import Message
+from bot.safone.extras import USERNAME
 from bot.safone.player import ydl, group_call_factory
 
 ADMINS = Config.ADMINS
 CHAT_ID = Config.CHAT_ID
-USERNAME = Config.BOT_USERNAME
 VIDEO_CALL = db.VIDEO_CALL
 RADIO_CALL = db.RADIO_CALL
 FFMPEG_PROCESSES = db.FFMPEG_PROCESSES
@@ -54,12 +54,15 @@ async def radio(client, m: Message):
                 ytstreamlink = f['url']
             station_stream_url = ytstreamlink
         except Exception as e:
-            await msg.edit(f"❌ **YouTube Download Error!** \n\n`{e}`")
+            await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
             print(e)
             return
     else:
         station_stream_url = query
         print(station_stream_url)
+
+    if os.path.exists(input_filename):
+        os.remove(input_filename)
 
     process = (
         ffmpeg.input(station_stream_url)
@@ -71,7 +74,7 @@ async def radio(client, m: Message):
 
     if CHAT_ID in RADIO_CALL:
         await sleep(1)
-        await msg.edit(f"📻 **Started [Radio Streaming]({query})!**", disable_web_page_preview=True)
+        await msg.edit(f"📻 **Started [Radio Streaming]({query}) !**", disable_web_page_preview=True)
     else:
         await msg.edit("🔄 `Starting Radio Stream ...`")
         await sleep(2)
@@ -79,6 +82,43 @@ async def radio(client, m: Message):
         try:
             await group_call.start(CHAT_ID)
             RADIO_CALL[CHAT_ID] = group_call
-            await msg.edit(f"📻 **Started [Radio Streaming]({query})!**", disable_web_page_preview=True)
+            await msg.edit(f"📻 **Started [Radio Streaming]({query}) !**", disable_web_page_preview=True)
         except Exception as e:
-            await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+            await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+
+
+@Client.on_message(filters.command(["restart", f"restart@{USERNAME}"]) & filters.user(ADMINS) & (filters.chat(CHAT_ID) | filters.private))
+async def restart(client, m: Message):
+    k = await m.reply_text("🔄 `Restarting ...`")
+    await sleep(3)
+
+    process = FFMPEG_PROCESSES.get(CHAT_ID)
+    if process:
+        try:
+            process.send_signal(SIGINT)
+            await sleep(3)
+        except subprocess.TimeoutExpired:
+            process.kill()
+        except Exception as e:
+            print(e)
+            pass
+        FFMPEG_PROCESSES[CHAT_ID] = ""
+
+    vid_call = VIDEO_CALL.get(CHAT_ID)
+    if vid_call:
+        await VIDEO_CALL[CHAT_ID].stop()
+        VIDEO_CALL.pop(CHAT_ID)
+        await sleep(3)
+
+    rad_call = RADIO_CALL.get(CHAT_ID)
+    if rad_call:
+        await RADIO_CALL[CHAT_ID].stop()
+        RADIO_CALL.pop(CHAT_ID)
+        await sleep(3)
+
+    os.execl(sys.executable, sys.executable, *sys.argv)
+    try:
+        await k.edit("✅ **Restarted Successfully! \nJoin @AsmSafone For More!**")
+        await k.reply_to_message.delete()
+    except:
+        pass

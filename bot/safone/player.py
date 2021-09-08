@@ -27,6 +27,7 @@ from signal import SIGINT
 from asyncio import sleep
 from config import Config, db
 from bot.safone.nopm import User
+from bot.safone.extras import USERNAME
 from youtube_dl import YoutubeDL
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -35,14 +36,13 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 ADMINS = Config.ADMINS
 CHAT_ID = Config.CHAT_ID
-USERNAME = Config.BOT_USERNAME
 VIDEO_CALL = db.VIDEO_CALL
 RADIO_CALL = db.RADIO_CALL
 FFMPEG_PROCESSES = db.FFMPEG_PROCESSES
 
 
 ydl_opts = {
-        'quiet': True 
+        "quiet": True,
         "geo_bypass": True,
         "nocheckcertificate": True,
 }
@@ -92,7 +92,7 @@ async def stream(client, m: Message):
                         ytstreamlink = f['url']
                 ytstream = ytstreamlink
             except Exception as e:
-                await msg.edit(f"❌ **YouTube Download Error!** \n\n`{e}`")
+                await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
                 print(e)
                 return
             await sleep(2)
@@ -104,15 +104,15 @@ async def stream(client, m: Message):
                     await group_call.join(CHAT_ID)
                     await group_call.start_video(ytstream, with_audio=True, repeat=False)
                     VIDEO_CALL[CHAT_ID] = group_call
-                    await msg.edit(f"▶️ **Started [YouTube Streaming]({query})!**", disable_web_page_preview=True)
+                    await msg.edit(f"▶️ **Started [YouTube Streaming]({query}) !**", disable_web_page_preview=True)
                 except Exception as e:
-                    await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+                    await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
             else:
                 try:
                     await group_call.join(CHAT_ID)
                     await group_call.start_video(ytstream, with_audio=True, repeat=False)
                     VIDEO_CALL[CHAT_ID] = group_call
-                    await msg.edit(f"▶️ **Started [YouTube Streaming]({query})!**", disable_web_page_preview=True)
+                    await msg.edit(f"▶️ **Started [YouTube Streaming]({query}) !**", disable_web_page_preview=True)
                 except Exception as e:
                     await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
         else:
@@ -127,17 +127,17 @@ async def stream(client, m: Message):
                     await group_call.join(CHAT_ID)
                     await group_call.start_video(livestream, with_audio=True, repeat=False)
                     VIDEO_CALL[CHAT_ID] = group_call
-                    await msg.edit(f"▶️ **Started [Live Streaming]({query})!**", disable_web_page_preview=True)
+                    await msg.edit(f"▶️ **Started [Live Streaming]({query}) !**", disable_web_page_preview=True)
                 except Exception as e:
-                    await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+                    await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
             else:
                 try:
                     await group_call.join(CHAT_ID)
                     await group_call.start_video(livestream, with_audio=True, repeat=False)
                     VIDEO_CALL[CHAT_ID] = group_call
-                    await msg.edit(f"▶️ **Started [Live Streaming]({query})!**", disable_web_page_preview=True)
+                    await msg.edit(f"▶️ **Started [Live Streaming]({query}) !**", disable_web_page_preview=True)
                 except Exception as e:
-                    await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+                    await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
 
     elif media.video or media.document:
         msg = await m.reply_text("🔄 `Processing ...`")
@@ -174,17 +174,17 @@ async def stream(client, m: Message):
                 await group_call.join(CHAT_ID)
                 await group_call.start_video(video, with_audio=True, repeat=False)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [Video Streaming](https://t.me/AsmSafone)!**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [Video Streaming](https://t.me/AsmSafone) !**", disable_web_page_preview=True)
             except Exception as e:
-                await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+                await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
         else:
             try:
                 await group_call.join(CHAT_ID)
                 await group_call.start_video(video, with_audio=True, repeat=False)
                 VIDEO_CALL[CHAT_ID] = group_call
-                await msg.edit(f"▶️ **Started [Video Streaming](https://t.me/AsmSafone)!**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [Video Streaming](https://t.me/AsmSafone) !**", disable_web_page_preview=True)
             except Exception as e:
-                await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
+                await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
 
     else:
         await m.reply_text("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
@@ -207,15 +207,15 @@ async def endstream(client, m: Message):
     if CHAT_ID in RADIO_CALL:
         await RADIO_CALL[CHAT_ID].stop()
         RADIO_CALL.pop(CHAT_ID)
-        await msg.edit("⏹️ **Stopped Radio Streaming!**")
+        await msg.edit("⏹️ **Stopped Radio Streaming !**")
 
     elif CHAT_ID in VIDEO_CALL:
         await VIDEO_CALL[CHAT_ID].stop()
         VIDEO_CALL.pop(CHAT_ID)
-        await msg.edit("⏹️ **Stopped Video Streaming!**")
+        await msg.edit("⏹️ **Stopped Video Streaming !**")
 
     else:
-        await msg.edit("🤖 **Please Start An Stream First!**")
+        await msg.edit("🤖 **Please Start An Stream First !**")
 
 
 admincmds=["stream", "radio", "endstream", f"stream@{USERNAME}", f"radio@{USERNAME}", f"endstream@{USERNAME}"]

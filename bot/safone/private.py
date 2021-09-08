@@ -22,9 +22,9 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram.errors import MessageNotModified
+from bot.safone.extras import USERNAME
 
 CHAT_ID = Config.CHAT_ID
-USERNAME = Config.BOT_USERNAME
 HOME_TEXT = "👋🏻 **Hi [{}](tg://user?id={})**, \n\nI'm **Video Player Bot**. \nI Can Stream Lives, Radios, YouTube Videos & Telegram Video Files On Voice Chat Of Telegram Channels & Groups 😉! \n\n**Made With ❤️ By @ImSafone!** 👑"
 HELP_TEXT = """
 🏷️ --**Setting Up**-- :
@@ -43,6 +43,7 @@ HELP_TEXT = """
 \u2022 `/radio` - start streaming the radio
 \u2022 `/stream` - start streaming the video
 \u2022 `/endstream` - stop streaming the video
+\u2022 `/restart` - restart the bot (owner only)
 
 © **Powered By** : 
 **@AsmSafone | @SafoTheBot** 👑

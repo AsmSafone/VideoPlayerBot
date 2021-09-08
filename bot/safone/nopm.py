@@ -17,12 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 import asyncio
-from pyrogram import Client, filters
 from config import Config
+from pyrogram import Client, filters
 from pyrogram.errors import BotInlineDisabled
+from bot.safone.extras import USERNAME
 
 ADMINS = Config.ADMINS
-USERNAME = Config.BOT_USERNAME
 REPLY_MESSAGE = Config.REPLY_MESSAGE
 
 User = Client(
