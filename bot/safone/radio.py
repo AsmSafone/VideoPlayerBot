@@ -103,22 +103,8 @@ async def restart(client, m: Message):
             print(e)
             pass
         FFMPEG_PROCESSES[CHAT_ID] = ""
-
-    vid_call = VIDEO_CALL.get(CHAT_ID)
-    if vid_call:
-        await VIDEO_CALL[CHAT_ID].stop()
-        VIDEO_CALL.pop(CHAT_ID)
-        await sleep(3)
-
-    rad_call = RADIO_CALL.get(CHAT_ID)
-    if rad_call:
-        await RADIO_CALL[CHAT_ID].stop()
-        RADIO_CALL.pop(CHAT_ID)
-        await sleep(3)
-
     os.execl(sys.executable, sys.executable, *sys.argv)
     try:
         await k.edit("✅ **Restarted Successfully! \nJoin @AsmSafone For More!**")
-        await k.reply_to_message.delete()
     except:
         pass

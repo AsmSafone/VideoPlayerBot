@@ -19,9 +19,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 import os
 import sys
 import asyncio
-from pyrogram import Client, idle
 from config import Config
 from bot.safone.nopm import User
+from pyrogram import Client, idle
 
 Bot = Client(
     ":memory:",
@@ -35,9 +35,9 @@ if not os.path.isdir("./downloads"):
 
 Bot.start()
 User.start()
-print("\nVideo Player Bot Started, Join @AsmSafone!")
+print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE!")
 
 idle()
 Bot.stop()
 User.stop()
-print("\nVideo Player Bot Stopped, Join @AsmSafone!")
+print("\n[INFO] - STOPPED VIDEO PLAYER BOT, JOIN @ASMSAFONE!")
