@@ -33,7 +33,7 @@
         "required": true
       },
       "CHAT_ID": {
-        "description": "ID of your Channel or Group where the bot will works or stream videos",
+        "description": "ID of Channel/Group where the bot will stream videos (for multiple chats seperated by space)",
         "required": true
       },
       "AUTH_USERS": {

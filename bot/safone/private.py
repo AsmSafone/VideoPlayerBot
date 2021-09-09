@@ -40,10 +40,8 @@ HELP_TEXT = """
 
 🏷️ --**Admin Only Commands**-- :
 
-\u2022 `/radio` - start streaming the radio
 \u2022 `/stream` - start streaming the video
 \u2022 `/endstream` - stop streaming the video
-\u2022 `/restart` - restart the bot (owner only)
 
 © **Powered By** : 
 **@AsmSafone | @SafoTheBot** 👑
