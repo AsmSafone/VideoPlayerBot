@@ -20,10 +20,11 @@ import os
 import sys
 import asyncio
 from config import Config
-from bot.safone.nopm import User
 from pyrogram import Client, idle
+from bot.safone.nopm import user
+from bot.safone.player import safone
 
-Bot = Client(
+bot = Client(
     ":memory:",
     Config.API_ID,
     Config.API_HASH,
@@ -33,11 +34,13 @@ Bot = Client(
 if not os.path.isdir("./downloads"):
     os.makedirs("./downloads")
 
-Bot.start()
-User.start()
+bot.start()
+user.start()
+safone.start()
 print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE!")
 
 idle()
-Bot.stop()
-User.stop()
+bot.stop()
+user.stop()
+safone.stop()
 print("\n[INFO] - STOPPED VIDEO PLAYER BOT, JOIN @ASMSAFONE!")

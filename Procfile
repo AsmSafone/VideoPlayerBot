@@ -1,1 +1,1 @@
-worker: bash start.sh
+worker: python3 -m bot

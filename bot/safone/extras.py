@@ -31,37 +31,3 @@ bot = Client(
 bot.start()
 ok = bot.get_me()
 USERNAME = ok.username
-
-try:
-    bot.send(
-        functions.bots.SetBotCommands(
-            commands=[
-                types.BotCommand(
-                    command="start",
-                    description="Start The Bot"
-                ),
-                types.BotCommand(
-                    command="help",
-                    description="Show Help Message"
-                ),
-                types.BotCommand(
-                    command="radio",
-                    description="Start Radio Streaming"
-                ),
-                types.BotCommand(
-                    command="stream",
-                    description="Start Video Streaming"
-                ),
-                types.BotCommand(
-                    command="endstream",
-                    description="Stop Streaming & Left VC"
-                ),
-                types.BotCommand(
-                    command="restart",
-                    description="Restart The Bot (Owner Only)"
-                )
-            ]
-        )
-    )
-except:
-    pass

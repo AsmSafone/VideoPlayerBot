@@ -25,13 +25,13 @@ from bot.safone.extras import USERNAME
 ADMINS = Config.ADMINS
 REPLY_MESSAGE = Config.REPLY_MESSAGE
 
-User = Client(
+user = Client(
     Config.SESSION_STRING,
     Config.API_ID,
     Config.API_HASH
 )
 
-@User.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited)
+@user.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited)
 async def nopm(client, message):
     if REPLY_MESSAGE is not None:
         try:

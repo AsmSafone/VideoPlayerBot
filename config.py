@@ -22,11 +22,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class db:
-    VIDEO_CALL = {}
-    RADIO_CALL = {}
-    FFMPEG_PROCESSES = {}
-
 class Config:
     ADMIN = os.environ.get("AUTH_USERS", "")
     ADMINS = [int(admin) if re.search('^\d+$', admin) else admin for admin in (ADMIN).split()]
