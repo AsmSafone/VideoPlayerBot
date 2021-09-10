@@ -1,4 +1,4 @@
-# Telegram Video Player Bot (Beta)
+# Telegram Video Player Bot
 ![GitHub Repo stars](https://img.shields.io/github/stars/AsmSafone/VideoPlayerBot?color=blue&style=flat)
 ![GitHub forks](https://img.shields.io/github/forks/AsmSafone/VideoPlayerBot?color=green&style=flat)
 ![GitHub issues](https://img.shields.io/github/issues/AsmSafone/VideoPlayerBot)
@@ -16,12 +16,12 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Tele
 
 ## Main Features
 
-- Supports Live Streaming
-- Supports YouTube Streaming
-- Supports Live Radio Streaming
-- Supports Video Files Streaming
-- Supports YouTube Live Streaming
-- Customizable Userbot Protection (PM Guard)
+- Supports Live Streaming.
+- Supports YouTube Streaming.
+- Supports Live Radio Streaming.
+- Supports Video Files Streaming.
+- Supports YouTube Live Streaming.
+- User Account Protection (PM Guard)
 
 ## Deploy Own Bot
 

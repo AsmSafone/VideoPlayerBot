@@ -5,7 +5,7 @@ FROM python:latest
 RUN apt update && apt upgrade -y
 RUN apt install git curl python3-pip ffmpeg -y
 
-# Updating Pip
+# Updating Pip Packages
 RUN pip3 install -U pip
 
 # Copying Requirements

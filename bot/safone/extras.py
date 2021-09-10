@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 import os
 import asyncio
-from config import Config
+from bot.config import Config
 from pyrogram import Client, filters
 from pyrogram.raw import functions, types
 

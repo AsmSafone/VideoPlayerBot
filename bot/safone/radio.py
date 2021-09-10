@@ -6,7 +6,7 @@ import asyncio
 import subprocess
 from asyncio import sleep
 from signal import SIGINT
-from config import Config, db
+from bot.config import Config, db
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from bot.safone.extras import USERNAME
@@ -91,7 +91,6 @@ async def radio(client, m: Message):
 async def restart(client, m: Message):
     k = await m.reply_text("🔄 `Restarting ...`")
     await sleep(3)
-
     process = FFMPEG_PROCESSES.get(CHAT_ID)
     if process:
         try:

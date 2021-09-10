@@ -25,7 +25,7 @@ import asyncio
 import subprocess
 from signal import SIGINT
 from asyncio import sleep
-from config import Config, db
+from bot.config import Config, db
 from bot.safone.nopm import User
 from bot.safone.extras import USERNAME
 from youtube_dl import YoutubeDL
