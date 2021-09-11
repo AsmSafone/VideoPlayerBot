@@ -35,8 +35,10 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Tele
 ```sh
 start - Start The Bot
 help - Show Help Message
-radio - Start Radio Streaming
+play - Start Audio Playback
 stream - Start Video Streaming
+pause - Pause The Current Stream
+resume - Resume The Paused Stream
 endstream - Stop Streaming & Left VC
 ```
 
@@ -45,7 +47,7 @@ endstream - Stop Streaming & Left VC
 2. `API_HASH` : User Account Telegram API_HASH, get it from my.telegram.org
 3. `BOT_TOKEN` : Your Telegram Bot Token, get it from @Botfather XD
 4. `SESSION_STRING` : Pyrogram Session String of User Account, get it from [@genStr robot](http://t.me/genStr_robot) or [![genStr](https://img.shields.io/badge/repl.it-genStr-yellowgreen)](https://repl.it/@AsmSafone/genStr)
-5. `CHAT_ID` : ID of Channel/Group where the bot will works or stream videos.
+5. `CHAT_ID` : ID of Channel/Group where the bot will works or stream videos (for multiple chats seperated by space).
 6. `AUTH_USERS` : ID of Users who can use Admins commands (for multiple users seperated by space).
 7. `REPLY_MESSAGE` : A reply to those who message the USER account in PM. Leave it blank if you do not need this feature.
 

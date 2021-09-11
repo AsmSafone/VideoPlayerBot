@@ -18,9 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 import os
 import asyncio
-from bot.config import Config
-from pyrogram import Client, filters
-from pyrogram.raw import functions, types
+from config import Config
+from pyrogram import Client
 
 bot = Client(
     "VideoPlayer",
@@ -31,37 +30,3 @@ bot = Client(
 bot.start()
 ok = bot.get_me()
 USERNAME = ok.username
-
-try:
-    bot.send(
-        functions.bots.SetBotCommands(
-            commands=[
-                types.BotCommand(
-                    command="start",
-                    description="Start The Bot"
-                ),
-                types.BotCommand(
-                    command="help",
-                    description="Show Help Message"
-                ),
-                types.BotCommand(
-                    command="radio",
-                    description="Start Radio Streaming"
-                ),
-                types.BotCommand(
-                    command="stream",
-                    description="Start Video Streaming"
-                ),
-                types.BotCommand(
-                    command="endstream",
-                    description="Stop Streaming & Left VC"
-                ),
-                types.BotCommand(
-                    command="restart",
-                    description="Restart The Bot (Owner Only)"
-                )
-            ]
-        )
-    )
-except:
-    pass

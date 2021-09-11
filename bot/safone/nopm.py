@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 import asyncio
-from bot.config import Config
+from config import Config
 from pyrogram import Client, filters
 from pyrogram.errors import BotInlineDisabled
 from bot.safone.extras import USERNAME

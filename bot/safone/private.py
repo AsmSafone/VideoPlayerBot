@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 import asyncio
-from bot.config import Config
+from config import Config
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
@@ -40,10 +40,12 @@ HELP_TEXT = """
 
 🏷️ --**Admin Only Commands**-- :
 
-\u2022 `/radio` - start streaming the radio
+\u2022 `/play` - start streaming the audio
 \u2022 `/stream` - start streaming the video
-\u2022 `/endstream` - stop streaming the video
-\u2022 `/restart` - restart the bot (owner only)
+\u2022 `/pause` - pause the current stream
+\u2022 `/resume` - resume the paused stream
+\u2022 `/endstream` - stop streaming & left vc
+\u2022 `/restart` - update and restart the bot
 
 © **Powered By** : 
 **@AsmSafone | @SafoTheBot** 👑

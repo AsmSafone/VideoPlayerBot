@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 import os
 import sys
 import asyncio
-from bot.config import Config
+from config import Config
 from bot.safone.nopm import User
 from pyrogram import Client, idle
 
