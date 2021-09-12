@@ -12,16 +12,16 @@
       "player",
       "python",
       "pyrogram",
-      "pytgcalls",
+      "py-tgcalls",
       "videoplayer"
     ],
     "env": {
       "API_ID": {
-        "description": "User Account Telegram API_ID get it from my.telegram.org/apps",
+        "description": "User Accounts Telegram API_ID get it from my.telegram.org/apps",
         "required": true
       },
       "API_HASH": {
-        "description": "User Account Telegram API_HASH get it from my.telegram.org/apps",
+        "description": "User Accounts Telegram API_HASH get it from my.telegram.org/apps",
         "required": true
       },
       "BOT_TOKEN": {
@@ -29,16 +29,30 @@
         "required": true
       },
       "SESSION_STRING": {
-        "description": "Pyrogram Session String of User Account, get it from @genStr_robot",
+        "description": "User Session String, get it from @genStr_robot. Read readme to learn more",
         "required": true
       },
       "CHAT_ID": {
-        "description": "ID of Channel/Group where the bot will stream videos (for multiple chats seperated by space)",
+        "description": "ID of your Channel or Group where the bot stream Music/YouTube Lives/Live Streams",
         "required": true
+      },
+      "LOG_GROUP": {
+        "description": "ID of the group to send playlist if CHAT_ID is a Group, if channel then leave blank",
+        "required": false
       },
       "AUTH_USERS": {
         "description": "ID of Auth Users who can use Admin commands (for multiple users seperated by space)",
         "required": true
+      },
+      "ADMIN_ONLY": {
+        "description": "Change it to 'True' If you want to make /play commands only for admins. By default /play is available for all.",
+        "value": "False",
+        "required": false
+      },
+      "STARTUP_STREAM": {
+        "description": "YouTube live / Direct link of a video to stream with bootup (Read the README for more info) ",
+        "value": "https://youtu.be/36YnV9STBqc",
+        "required": false
       },
       "REPLY_MESSAGE": {
         "description": "A reply message to those who message the USER account in PM. Make it blank if you do not need this feature.",

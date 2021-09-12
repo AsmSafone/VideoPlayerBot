@@ -16,31 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
-import os
-import sys
-import asyncio
 from config import Config
-from pyrogram import Client, idle
-from bot.safone.nopm import user
-from bot.safone.player import safone
+from logger import LOGGER
+from pyrogram import Client
+from pytgcalls import PyTgCalls
 
-bot = Client(
-    ":memory:",
+USER = Client(
+    Config.SESSION,
     Config.API_ID,
     Config.API_HASH,
-    bot_token=Config.BOT_TOKEN,
-    plugins=dict(root="bot.safone"),
-)
-if not os.path.isdir("./downloads"):
-    os.makedirs("./downloads")
+    plugins=dict(root="plugins.userbot")
+    )
+group_call = PyTgCalls(USER, cache_duration=180)
 
-bot.start()
-user.start()
-safone.start()
-print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE!")
 
-idle()
-bot.stop()
-user.stop()
-safone.stop()
-print("\n[INFO] - STOPPED VIDEO PLAYER BOT, JOIN @ASMSAFONE!")

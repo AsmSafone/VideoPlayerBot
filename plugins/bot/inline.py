@@ -16,24 +16,31 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
-import asyncio
 from config import Config
+from logger import LOGGER
 from pyrogram import Client, errors
+from youtubesearchpython import VideosSearch
 from pyrogram.handlers import InlineQueryHandler
 from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup
-from youtubesearchpython import VideosSearch
-
-REPLY_MESSAGE = Config.REPLY_MESSAGE
 
 buttons = [
+            [
+                InlineKeyboardButton("❔ HOW TO USE ME ❔", callback_data="help"),
+            ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
                 InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
             ],
             [
-                InlineKeyboardButton("🤖 MAKE YOUR OWN BOT 🤖", url="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot"),
+                InlineKeyboardButton("🤖 MAKE YOUR OWN BOT 🤖", url="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot/tree/alpha"),
             ]
          ]
+
+def get_cmd(dur):
+    if dur:
+        return "/play"
+    else:
+        return "/stream"
 
 @Client.on_inline_query()
 async def search(client, query):
@@ -42,7 +49,7 @@ async def search(client, query):
         answers.append(
             InlineQueryResultArticle(
                 title="Deploy Own Video Player Bot",
-                input_message_content=InputTextMessageContent(f"{REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>", disable_web_page_preview=True),
+                input_message_content=InputTextMessageContent(f"{Config.REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>", disable_web_page_preview=True),
                 reply_markup=InlineKeyboardMarkup(buttons)
                 )
             )
@@ -53,7 +60,7 @@ async def search(client, query):
         await client.answer_inline_query(
             query.id,
             results=answers,
-            switch_pm_text=("✍️ Type An Video Name!"),
+            switch_pm_text=("✍️ Type An Video Name !"),
             switch_pm_parameter="help",
             cache_time=0
         )
@@ -68,9 +75,7 @@ async def search(client, query):
                         v["viewCount"]["short"]
                     ),
                     input_message_content=InputTextMessageContent(
-                        "/stream https://www.youtube.com/watch?v={}".format(
-                            v["id"]
-                        )
+                        "{} https://www.youtube.com/watch?v={}".format(get_cmd(v["duration"]), v["id"])
                     ),
                     thumb_url=v["thumbnails"][0]["url"]
                 )
@@ -84,7 +89,7 @@ async def search(client, query):
             await query.answer(
                 results=answers,
                 cache_time=0,
-                switch_pm_text=("❌ No Results Found!"),
+                switch_pm_text=("❌ No Results Found !"),
                 switch_pm_parameter="",
             )
 

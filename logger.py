@@ -16,18 +16,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
-import os
-import asyncio
-from config import Config
-from pyrogram import Client, filters
-from pyrogram.raw import functions, types
+import logging
+from logging.handlers import RotatingFileHandler
 
-bot = Client(
-    "VideoPlayer",
-    Config.API_ID,
-    Config.API_HASH,
-    bot_token=Config.BOT_TOKEN
+logging.basicConfig(
+    level=logging.WARNING,
+    format="[%(asctime)s - %(levelname)s] - %(name)s - %(message)s",
+    datefmt='%d-%b-%y %H:%M:%S',
+    handlers=[
+        RotatingFileHandler(
+            "botlog.txt",
+            maxBytes=50000000,
+            backupCount=10
+        ),
+        logging.StreamHandler()
+    ]
 )
-bot.start()
-ok = bot.get_me()
-USERNAME = ok.username
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
+logging.getLogger("pytgcalls").setLevel(logging.WARNING)
+
+LOGGER=logging.getLogger(__name__)
+
+

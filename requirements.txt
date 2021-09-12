@@ -1,8 +1,8 @@
-TgCrypto
-requests
+tgcrypto
+py-tgcalls
 youtube_dl
 ffmpeg-python
 python-dotenv
-py-tgcalls==0.8.0
+youtube_search
 youtube_search_python
 git+https://github.com/pyrogram/pyrogram@master
