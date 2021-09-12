@@ -168,7 +168,6 @@ async def resume(_, m: Message):
         await m.reply_text("❌ **Noting Is Streaming !**")
 
 
-
 @Client.on_message(filters.command(["endstream", f"endstream@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
 async def endstream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
@@ -214,3 +213,16 @@ async def not_chat(_, m: Message):
             ]
          ]
     await m.reply_text(text="**Sorry, You Can't Use This Bot In This Group 🤷‍♂️! But You Can Make Your Own Bot Like This From The [Source Code](https://github.com/AsmSafone/VideoPlayerBot) Below 😉!**", reply_markup=InlineKeyboardMarkup(buttons), disable_web_page_preview=True)
+
+
+# pytgcalls handlers
+
+@group_call.on_audio_playout_ended
+async def audio_ended_handler(_, __):
+    await group_call.stop()
+    print("[INFO] - AUDIO_CALL ENDED !")
+
+@group_call.on_video_playout_ended
+async def video_ended_handler(_, __):
+    await group_call.stop()
+    print("[INFO] - VIDEO_CALL ENDED !")

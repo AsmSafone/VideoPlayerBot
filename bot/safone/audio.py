@@ -105,7 +105,7 @@ async def play(client, m: Message):
         await m.reply_text("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Audio To Start Audio Streaming!__")
 
 
-@Client.on_message(filters.command(["restart", f"restart@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
+@Client.on_message(filters.command(["restart", f"restart@{USERNAME}"]) & filters.user(ADMINS) & (filters.chat(CHAT_ID) | filters.private))
 async def restart(client, m: Message):
     k = await m.reply_text("🔄 `Restarting ...`")
     await sleep(3)
