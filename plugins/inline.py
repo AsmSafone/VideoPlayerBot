@@ -17,13 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 import asyncio
-from config import Config
+from config import REPLY_MESSAGE
 from pyrogram import Client, errors
 from pyrogram.handlers import InlineQueryHandler
 from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup
 from youtubesearchpython import VideosSearch
 
-REPLY_MESSAGE = Config.REPLY_MESSAGE
 
 buttons = [
             [

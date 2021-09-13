@@ -16,26 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
-import os
-from os import getenv
-from dotenv import load_dotenv
+from pyrogram import Client
+from config import API_ID, API_HASH, BOT_TOKEN
 
-if os.path.exists(".env"):
-    load_dotenv(".env")
-
-admins = {}
-AUDIO_CALL = {}
-VIDEO_CALL = {}
-API_ID = int(getenv("API_ID", ""))
-API_HASH = getenv("API_HASH", "")
-BOT_TOKEN = getenv("BOT_TOKEN", "")
-SESSION_STRING = getenv("SESSION_STRING", "")
-SUPPORT_GROUP = getenv("SUPPORT_GROUP", "SafoTheBot")
-UPDATES_CHANNEL = getenv("UPDATES_CHANNEL", "AsmSafone")
-ASSISTANT_NAME = getenv("ASSISTANT_NAME", "VideoPlayerAssistant")
-SUDO_USERS = list(map(int, getenv("SUDO_USERS").split()))
-REPLY_MESSAGE = getenv("REPLY_MESSAGE", "")
-if REPLY_MESSAGE:
-    REPLY_MESSAGE = REPLY_MESSAGE
-else:
-    REPLY_MESSAGE = None
+bot = Client(
+    "VideoPlayer",
+    API_ID,
+    API_HASH,
+    bot_token=BOT_TOKEN
+)
+bot.start()
+ok = bot.get_me()
+USERNAME = ok.username
+BOT_NAME = ok.first_name

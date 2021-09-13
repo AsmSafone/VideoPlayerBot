@@ -5,22 +5,35 @@ import ffmpeg
 import asyncio
 import subprocess
 from asyncio import sleep
-from config import Config, db
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from bot.safone.extras import USERNAME
-from bot.safone.video import ydl, group_call
+from helper.bot_utils import USERNAME
+from config import AUDIO_CALL, VIDEO_CALL
+from plugins.video import ydl, group_call
+from helper.decorators import authorized_users_only, sudo_users_only
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-ADMINS = Config.ADMINS
-CHAT_ID = Config.CHAT_ID
-VIDEO_CALL = db.VIDEO_CALL
-AUDIO_CALL = db.AUDIO_CALL
 
-@Client.on_message(filters.command(["play", f"play@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
+@Client.on_message(filters.command(["play", f"play@{USERNAME}"]))
+@authorized_users_only
 async def play(client, m: Message):
     media = m.reply_to_message
     if not media and not ' ' in m.text:
-        await m.reply_text("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Audio To Start Audio Streaming!__")
+        await m.reply_text(
+            "💁🏻‍♂️ Do you want to search for a YouTube video?",
+            reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "✅ Yes", switch_inline_query_current_chat=""
+                    ),
+                    InlineKeyboardButton(
+                        "No ❌", callback_data="close"
+                    )
+                ]
+            ]
+        )
+    )
 
     elif ' ' in m.text:
         text = m.text.split(' ', 1)
@@ -43,7 +56,7 @@ async def play(client, m: Message):
         regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
         match = re.match(regex,query)
         if match:
-            await msg.edit("🔄 `Starting YouTube Playback ...`")
+            await msg.edit("🔄 `Starting YouTube Audio Stream ...`")
             try:
                 meta = ydl.extract_info(query, download=False)
                 formats = meta.get('formats', [meta])
@@ -59,18 +72,18 @@ async def play(client, m: Message):
                 await group_call.join(chat_id)
                 await group_call.start_audio(ytstream, repeat=False)
                 AUDIO_CALL[chat_id] = group_call
-                await msg.edit(f"▶️ **Started [YouTube Playback]({query}) !**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [YouTube Audio Streaming]({query}) !**", disable_web_page_preview=True)
             except Exception as e:
                 await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
         else:
-            await msg.edit("🔄 `Starting Radio Stream ...`")
+            await msg.edit("🔄 `Starting Live Audio Stream ...`")
             livestream = query
             await sleep(2)
             try:
                 await group_call.join(chat_id)
                 await group_call.start_audio(livestream, repeat=False)
                 AUDIO_CALL[chat_id] = group_call
-                await msg.edit(f"▶️ **Started [Radio Streaming]({query}) !**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [Live Audio Streaming]({query}) !**", disable_web_page_preview=True)
             except Exception as e:
                 await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
 
@@ -105,7 +118,8 @@ async def play(client, m: Message):
         await m.reply_text("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Audio To Start Audio Streaming!__")
 
 
-@Client.on_message(filters.command(["restart", f"restart@{USERNAME}"]) & filters.user(ADMINS) & (filters.chat(CHAT_ID) | filters.private))
+@Client.on_message(filters.command(["restart", f"restart@{USERNAME}"]))
+@sudo_users_only
 async def restart(client, m: Message):
     k = await m.reply_text("🔄 `Restarting ...`")
     await sleep(3)

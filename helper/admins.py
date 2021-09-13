@@ -16,26 +16,25 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
-import os
-from os import getenv
-from dotenv import load_dotenv
+import assets.admins
+from typing import List
+from assets.admins import set
+from pyrogram.types import Chat
+from assets.admins import get as gett
 
-if os.path.exists(".env"):
-    load_dotenv(".env")
 
-admins = {}
-AUDIO_CALL = {}
-VIDEO_CALL = {}
-API_ID = int(getenv("API_ID", ""))
-API_HASH = getenv("API_HASH", "")
-BOT_TOKEN = getenv("BOT_TOKEN", "")
-SESSION_STRING = getenv("SESSION_STRING", "")
-SUPPORT_GROUP = getenv("SUPPORT_GROUP", "SafoTheBot")
-UPDATES_CHANNEL = getenv("UPDATES_CHANNEL", "AsmSafone")
-ASSISTANT_NAME = getenv("ASSISTANT_NAME", "VideoPlayerAssistant")
-SUDO_USERS = list(map(int, getenv("SUDO_USERS").split()))
-REPLY_MESSAGE = getenv("REPLY_MESSAGE", "")
-if REPLY_MESSAGE:
-    REPLY_MESSAGE = REPLY_MESSAGE
-else:
-    REPLY_MESSAGE = None
+async def get_administrators(chat: Chat) -> List[int]:
+    get = gett(chat.id)
+
+    if get:
+        return get
+    else:
+        administrators = await chat.get_members(filter="administrators")
+        to_set = []
+
+        for administrator in administrators:
+            if administrator.can_manage_voice_chats:
+                to_set.append(administrator.user.id)
+
+        set(chat.id, to_set)
+        return await get_administrators(chat)

@@ -24,19 +24,15 @@ import ffmpeg
 import asyncio
 import subprocess
 from asyncio import sleep
-from config import Config, db
-from bot.safone.nopm import User
+from plugins.nopm import User
 from youtube_dl import YoutubeDL
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pytgcalls import GroupCallFactory
-from bot.safone.extras import USERNAME
+from helper.bot_utils import USERNAME
+from config import AUDIO_CALL, VIDEO_CALL
+from helper.decorators import authorized_users_only
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
-ADMINS = Config.ADMINS
-CHAT_ID = Config.CHAT_ID
-VIDEO_CALL = db.VIDEO_CALL
-AUDIO_CALL = db.AUDIO_CALL
 
 
 ydl_opts = {
@@ -47,11 +43,26 @@ ydl_opts = {
 ydl = YoutubeDL(ydl_opts)
 group_call = GroupCallFactory(User, GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
 
-@Client.on_message(filters.command(["stream", f"stream@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
+@Client.on_message(filters.command(["stream", f"stream@{USERNAME}"]))
+@authorized_users_only
 async def stream(client, m: Message):
     media = m.reply_to_message
     if not media and not ' ' in m.text:
-        await m.reply_text("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
+        await m.reply_text(
+            "💁🏻‍♂️ Do you want to search for a YouTube video?",
+            reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "✅ Yes", switch_inline_query_current_chat=""
+                    ),
+                    InlineKeyboardButton(
+                        "No ❌", callback_data="close"
+                    )
+                ]
+            ]
+        )
+    )
 
     elif ' ' in m.text:
         text = m.text.split(' ', 1)
@@ -74,7 +85,7 @@ async def stream(client, m: Message):
         regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
         match = re.match(regex,query)
         if match:
-            await msg.edit("🔄 `Starting YouTube Stream ...`")
+            await msg.edit("🔄 `Starting YouTube Video Stream ...`")
             try:
                 meta = ydl.extract_info(query, download=False)
                 formats = meta.get('formats', [meta])
@@ -90,18 +101,18 @@ async def stream(client, m: Message):
                 await group_call.join(chat_id)
                 await group_call.start_video(ytstream, with_audio=True, repeat=False)
                 VIDEO_CALL[chat_id] = group_call
-                await msg.edit(f"▶️ **Started [YouTube Streaming]({query}) !**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [YouTube Video Streaming]({query}) !**", disable_web_page_preview=True)
             except Exception as e:
                 await msg.edit(f"❌ **An Error Occoured!** \n\nError: `{e}`")
         else:
-            await msg.edit("🔄 `Starting Live Stream ...`")
+            await msg.edit("🔄 `Starting Live Video Stream ...`")
             livestream = query
             await sleep(2)
             try:
                 await group_call.join(chat_id)
                 await group_call.start_video(livestream, with_audio=True, repeat=False)
                 VIDEO_CALL[chat_id] = group_call
-                await msg.edit(f"▶️ **Started [Live Streaming]({query}) !**", disable_web_page_preview=True)
+                await msg.edit(f"▶️ **Started [Live Video Streaming]({query}) !**", disable_web_page_preview=True)
             except Exception as e:
                 await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
 
@@ -136,7 +147,8 @@ async def stream(client, m: Message):
         await m.reply_text("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
 
 
-@Client.on_message(filters.command(["pause", f"pause@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
+@Client.on_message(filters.command(["pause", f"pause@{USERNAME}"]))
+@authorized_users_only
 async def pause(_, m: Message):
     chat_id = m.chat.id
 
@@ -149,10 +161,11 @@ async def pause(_, m: Message):
         await m.reply_text("⏸ **Paused Video Streaming !**")
 
     else:
-        await m.reply_text("❌ **Noting Is Streaming !**")
+        await m.reply_text("❌ **Noting is Streaming !**")
 
 
-@Client.on_message(filters.command(["resume", f"resume@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
+@Client.on_message(filters.command(["resume", f"resume@{USERNAME}"]))
+@authorized_users_only
 async def resume(_, m: Message):
     chat_id = m.chat.id
 
@@ -165,10 +178,11 @@ async def resume(_, m: Message):
         await m.reply_text("▶️ **Resumed Video Streaming !**")
 
     else:
-        await m.reply_text("❌ **Noting Is Streaming !**")
+        await m.reply_text("❌ **Noting is Streaming !**")
 
 
-@Client.on_message(filters.command(["endstream", f"endstream@{USERNAME}"]) & filters.user(ADMINS) & filters.chat(CHAT_ID))
+@Client.on_message(filters.command(["endstream", f"endstream@{USERNAME}"]))
+@authorized_users_only
 async def endstream(client, m: Message):
     msg = await m.reply_text("🔄 `Processing ...`")
     chat_id = m.chat.id
@@ -187,42 +201,16 @@ async def endstream(client, m: Message):
         await msg.edit("🤖 **Please Start An Stream First !**")
 
 
-admincmds=["stream", "play", "pause", "resume", "endstream", "restart", f"restart@{USERNAME}", f"stream@{USERNAME}", f"play@{USERNAME}", f"pause@{USERNAME}", f"resume@{USERNAME}", f"endstream@{USERNAME}"]
-
-@Client.on_message(filters.command(admincmds) & ~filters.user(ADMINS) & filters.chat(CHAT_ID))
-async def notforu(_, m: Message):
-    k = await m.reply_sticker("CAACAgUAAxkBAAEBpyZhF4R-ZbS5HUrOxI_MSQ10hQt65QACcAMAApOsoVSPUT5eqj5H0h4E")
-    await sleep(5)
-    await k.delete()
-    try:
-        await m.delete()
-    except:
-        pass
-
-allcmd = ["start", "help", f"start@{USERNAME}", f"help@{USERNAME}"] + admincmds
-
-@Client.on_message(filters.command(allcmd) & filters.group & ~filters.chat(CHAT_ID))
-async def not_chat(_, m: Message):
-    buttons = [
-            [
-                InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
-                InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
-            ],
-            [
-                InlineKeyboardButton("🤖 MAKE YOUR OWN BOT 🤖", url="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot"),
-            ]
-         ]
-    await m.reply_text(text="**Sorry, You Can't Use This Bot In This Group 🤷‍♂️! But You Can Make Your Own Bot Like This From The [Source Code](https://github.com/AsmSafone/VideoPlayerBot) Below 😉!**", reply_markup=InlineKeyboardMarkup(buttons), disable_web_page_preview=True)
-
-
 # pytgcalls handlers
 
 @group_call.on_audio_playout_ended
 async def audio_ended_handler(_, __):
+    await sleep(3)
     await group_call.stop()
-    print("[INFO] - AUDIO_CALL ENDED !")
+    print(f"[INFO] - AUDIO_CALL ENDED !")
 
 @group_call.on_video_playout_ended
 async def video_ended_handler(_, __):
+    await sleep(3)
     await group_call.stop()
-    print("[INFO] - VIDEO_CALL ENDED !")
+    print(f"[INFO] - VIDEO_CALL ENDED !")

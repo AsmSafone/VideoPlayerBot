@@ -16,28 +16,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
-import os
-import sys
-import asyncio
-from config import Config
-from bot.safone.nopm import User
-from pyrogram import Client, idle
+from config import admins
+from typing import Dict, List
 
-Bot = Client(
-    ":memory:",
-    Config.API_ID,
-    Config.API_HASH,
-    bot_token=Config.BOT_TOKEN,
-    plugins=dict(root="bot.safone"),
-)
-if not os.path.isdir("./downloads"):
-    os.makedirs("./downloads")
+admins: Dict[int, List[int]] = {}
 
-Bot.start()
-User.start()
-print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE !")
 
-idle()
-Bot.stop()
-User.stop()
-print("\n[INFO] - STOPPED VIDEO PLAYER BOT, JOIN @ASMSAFONE !")
+def set(chat_id: int, admins_: List[int]):
+    admins[chat_id] = admins_
+
+
+def get(chat_id: int) -> List[int]:
+    if chat_id in admins:
+        return admins[chat_id]
+    return []

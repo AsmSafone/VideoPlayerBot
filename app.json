@@ -32,13 +32,23 @@
         "description": "Pyrogram Session String of User Account, get it from @genStr_robot",
         "required": true
       },
-      "CHAT_ID": {
-        "description": "ID of your Channel or Group where the bot will works or stream videos (for multiple chats seperated by space)",
+      "SUDO_USERS": {
+        "description": "ID of Sudo Users who can use Admin commands (for multiple users seperated by space)",
         "required": true
       },
-      "AUTH_USERS": {
-        "description": "ID of Auth Users who can use Admin commands (for multiple users seperated by space)",
+      "ASSISTANT_NAME": {
+        "description": "Your Video Player's assistant Username without @.",
         "required": true
+      },
+      "SUPPORT_GROUP": {
+        "description": "Support Group username without @ [Leave this if you don't have one]",
+        "required": false,
+        "value": "SafoTheBot"
+      },     
+      "UPDATES_CHANNEL": {
+        "description": "Updates Channel username without @ [Leave this if you don't have one].",
+        "required": false,
+        "value": "AsmSafone"
       },
       "REPLY_MESSAGE": {
         "description": "A reply message to those who message the USER account in PM. Make it blank if you do not need this feature.",

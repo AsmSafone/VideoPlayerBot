@@ -17,16 +17,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 import os
-import asyncio
-from config import Config
-from pyrogram import Client
+from plugins.nopm import User
+from pyrogram import Client, idle
+from config import API_ID, API_HASH, BOT_TOKEN
 
-bot = Client(
-    "VideoPlayer",
-    Config.API_ID,
-    Config.API_HASH,
-    bot_token=Config.BOT_TOKEN
+Bot = Client(
+    ":memory:",
+    API_ID,
+    API_HASH,
+    bot_token=BOT_TOKEN,
+    plugins=dict(root="plugins"),
 )
-bot.start()
-ok = bot.get_me()
-USERNAME = ok.username
+if not os.path.isdir("./downloads"):
+    os.makedirs("./downloads")
+
+Bot.start()
+User.start()
+print("\n[INFO] - STARTED VIDEO PLAYER BOT, JOIN @ASMSAFONE !")
+
+idle()
+Bot.stop()
+User.stop()
+print("\n[INFO] - STOPPED VIDEO PLAYER BOT, JOIN @ASMSAFONE !")

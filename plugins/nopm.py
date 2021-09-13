@@ -17,21 +17,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 import asyncio
-from config import Config
 from pyrogram import Client, filters
+from helper.bot_utils import USERNAME
 from pyrogram.errors import BotInlineDisabled
-from bot.safone.extras import USERNAME
+from config import API_ID, API_HASH, SESSION_STRING, REPLY_MESSAGE
 
-ADMINS = Config.ADMINS
-REPLY_MESSAGE = Config.REPLY_MESSAGE
 
 User = Client(
-    Config.SESSION_STRING,
-    Config.API_ID,
-    Config.API_HASH
+    SESSION_STRING,
+    API_ID,
+    API_HASH
 )
 
-@User.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited)
+@User.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited & ~filters.chat([777000, 454000]))
 async def nopm(client, message):
     if REPLY_MESSAGE is not None:
         try:
@@ -43,12 +41,8 @@ async def nopm(client, message):
                 hide_via=True
             )
         except BotInlineDisabled:
-            for admin in ADMINS:
-                try:
-                    await client.send_message(chat_id=admin, text=f"Hey 🙋‍♂️,\nInline Mode Isn't Enabled For @{USERNAME} Yet. A Nibba Is Spaming Me In PM, Enable Inline Mode For @{USERNAME} From @Botfather To Reply Him 😉!")
-                except Exception as e:
-                    print(e)
-                    pass
+            print(f"[WARN] - Inline Mode for @{USERNAME} is not enabled. Enable from @Botfather to enable PM Permit !")
+            await message.reply_text(f"{REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>")
         except Exception as e:
             print(e)
             pass
