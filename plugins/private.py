@@ -46,7 +46,7 @@ async def start(client, message):
    reply_markup = InlineKeyboardMarkup(buttons)
    if message.chat.type == 'private':
        await message.reply_text(
-          START_TEXT.format(user=message.from_user.mention),
+          START_TEXT,
           reply_markup=reply_markup
        )
    else:
@@ -106,7 +106,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         reply_markup = InlineKeyboardMarkup(buttons)
         try:
             await query.edit_message_text(
-                START_TEXT.format(user=query.from_user.mention),
+                START_TEXT,
                 reply_markup=reply_markup
             )
         except MessageNotModified:

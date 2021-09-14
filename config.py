@@ -20,8 +20,7 @@ import os
 from os import getenv
 from dotenv import load_dotenv
 
-if os.path.exists(".env"):
-    load_dotenv(".env")
+load_dotenv()
 
 admins = {}
 AUDIO_CALL = {}
