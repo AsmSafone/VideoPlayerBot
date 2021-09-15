@@ -18,16 +18,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 import asyncio
 from pyrogram import Client, filters
-from helper.bot_utils import USERNAME
+from helpers.bot_utils import USERNAME
 from pyrogram.errors import BotInlineDisabled
 from config import API_ID, API_HASH, SESSION_STRING, REPLY_MESSAGE
-
 
 User = Client(
     SESSION_STRING,
     API_ID,
     API_HASH
 )
+
 
 @User.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited & ~filters.chat([777000, 454000]))
 async def nopm(client, message):

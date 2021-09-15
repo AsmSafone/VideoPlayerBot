@@ -1,6 +1,5 @@
-import os
 from config import ASSISTANT_NAME
-from helper.bot_utils import BOT_NAME, USERNAME
+from helpers.bot_utils import BOT_NAME, USERNAME
 
 
 START_TEXT = f"👋🏻 **Hello**, \n\nThis is **{BOT_NAME}** \nI Can Stream Lives, Radios, YouTube Videos & Telegram Audio / Video Files On Voice Chat Of Telegram Groups. Let's Enjoy Cinematic View Of Group Video Player With Your Friends 😉! \n\n**Made With ❤️ By @ImSafone!** 👑"

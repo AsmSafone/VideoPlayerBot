@@ -20,7 +20,7 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import MessageNotModified
-from helper.bot_utils import BOT_NAME, USERNAME
+from helpers.bot_utils import BOT_NAME, USERNAME
 from config import SUPPORT_GROUP, UPDATES_CHANNEL
 from translations import START_TEXT, HELP_TEXT, ABOUT_TEXT
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
