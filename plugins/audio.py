@@ -34,7 +34,7 @@ async def play(client, m: Message):
                 meta = ydl.extract_info(query, download=False)
                 formats = meta.get('formats', [meta])
                 for f in formats:
-                        ytstreamlink = f['url']
+                    ytstreamlink = f['url']
                 link = ytstreamlink
             except Exception as e:
                 await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
@@ -61,7 +61,7 @@ async def play(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_audio(link, repeat=False)
             AUDIO_CALL[chat_id] = group_call
-            await msg.edit(f"▶️ **Started [Audio Streaming]({query}) !**", disable_web_page_preview=True)
+            await msg.edit(f"▶️ **Started [Audio Streaming]({query}) In {m.chat.title} !**", disable_web_page_preview=True)
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
 
@@ -86,7 +86,7 @@ async def play(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_audio(audio, repeat=False)
             AUDIO_CALL[chat_id] = group_call
-            await msg.edit(f"▶️ **Started [Audio Streaming](https://t.me/AsmSafone) !**", disable_web_page_preview=True)
+            await msg.edit(f"▶️ **Started [Audio Streaming](https://t.me/AsmSafone) In {m.chat.title} !**", disable_web_page_preview=True)
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
 

@@ -65,14 +65,14 @@ async def stream(client, m: Message):
                 meta = ydl.extract_info(query, download=False)
                 formats = meta.get('formats', [meta])
                 for f in formats:
-                        ytstreamlink = f['url']
+                    ytstreamlink = f['url']
                 link = ytstreamlink
                 search = VideosSearch(query, limit=1)
                 opp = search.result()["result"]
                 oppp = opp[0]
                 thumbid = oppp["thumbnails"][0]["url"]
                 split = thumbid.split("?")
-                photoid = split[0].strip()
+                thumb = split[0].strip()
             except Exception as e:
                 await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
                 print(e)
@@ -80,7 +80,7 @@ async def stream(client, m: Message):
         else:
             await msg.edit("🔄 `Starting Live Video Stream ...`")
             link = query
-            photoid = "https://telegra.ph/file/3e14128ad5c9ec47801bd.jpg"
+            thumb = "https://telegra.ph/file/3e14128ad5c9ec47801bd.jpg"
 
         vid_call = VIDEO_CALL.get(chat_id)
         if vid_call:
@@ -99,7 +99,7 @@ async def stream(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_video(link, with_audio=True, repeat=False)
             VIDEO_CALL[chat_id] = group_call
-            await m.reply_photo(photo=photoid, caption=f"▶️ **Started [Video Streaming]({query}) !**")
+            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming]({query}) In {m.chat.title} !**")
             await msg.delete()
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
@@ -109,9 +109,9 @@ async def stream(client, m: Message):
         if media.video.thumbs:
             lol = media.video.thumbs[0]
             lel = await client.download_media(lol['file_id'])
-            photoid = lel
+            thumb = lel
         else:
-            photoid = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg"
+            thumb = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg"
         video = await client.download_media(media)
 
         vid_call = VIDEO_CALL.get(chat_id)
@@ -131,7 +131,7 @@ async def stream(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_video(video, with_audio=True, repeat=False)
             VIDEO_CALL[chat_id] = group_call
-            await m.reply_photo(photo=photoid, caption=f"▶️ **Started [Video Streaming](https://t.me/AsmSafone) !**")
+            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming](https://t.me/AsmSafone) In {m.chat.title} !**")
             await msg.delete()
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
