@@ -20,9 +20,10 @@ from config import Config
 from logger import LOGGER
 from pyrogram.types import Message
 from pyrogram import Client, filters
-from utils import get_playlist_str, get_admins, is_admin, restart_playout, skip, pause, resume, volume, get_buttons, is_admin
+from utils import get_playlist_str, is_admin, mute, restart_playout, skip, pause, resume, unmute, volume, get_buttons, is_admin, seek_file, get_player_string
 
 admin_filter=filters.create(is_admin)
+
 
 @Client.on_message(filters.command(["playlist", f"playlist@{Config.BOT_USERNAME}"]) & (filters.chat(Config.CHAT_ID) | filters.private))
 async def c_playlist(client, message):
@@ -30,24 +31,25 @@ async def c_playlist(client, message):
     if message.chat.type == "private":
         await message.reply_text(
             pl,
-            parse_mode="Markdown",
             disable_web_page_preview=True,
-            reply_markup=await get_buttons()
         )
     else:
         if Config.msg.get('playlist') is not None:
-            await Config.msg['playlist'].delete()
+            try:
+                await Config.msg['playlist'].delete()
+                await Config.msg['playlist'].reply_to_message.delete()
+            except:
+                pass
         Config.msg['playlist'] = await message.reply_text(
             pl,
             disable_web_page_preview=True,
-            parse_mode="Markdown",
-            reply_markup=await get_buttons()
         )
+
 
 @Client.on_message(filters.command(["skip", f"skip@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private))
 async def skip_track(_, m: Message):
     if not Config.playlist:
-        await m.reply_text("🚫 **Empty Playlist !**")
+        await m.reply_text("⛔️ **Empty Playlist !**")
         return
     if len(m.command) == 1:
         await skip()
@@ -63,12 +65,13 @@ async def skip_track(_, m: Message):
                 else:
                     await m.reply_text(f"❌ **Can't Skip First Two Video - {i} !**")
         except (ValueError, TypeError):
-            await m.reply_text("🚫 **Invalid Input !**")
+            await m.reply_text("⛔️ **Invalid Input !**")
     pl=await get_playlist_str()
     if m.chat.type == "private":
         await m.reply_text(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
     elif not Config.LOG_GROUP and m.chat.type == "supergroup":
         await m.reply_text(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
+
 
 @Client.on_message(filters.command(["pause", f"pause@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private))
 async def pause_playing(_, m: Message):
@@ -88,7 +91,6 @@ async def resume_playing(_, m: Message):
         return await m.reply_text("🤖 **Nothing Is Paused !**")
     await m.reply_text("▶️ **Resumed Streaming !**")
     await resume()
-    
 
 
 @Client.on_message(filters.command(["volume", f"volume@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private))
@@ -108,3 +110,95 @@ async def replay_playout(client, m: Message):
         return await m.reply_text("🤖 **Didn't Joined Video Chat !**")
     await m.reply_text("🔂 **Replaying Stream !**")
     await restart_playout()
+
+
+@Client.on_message(filters.command(["mute", f"mute@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private))
+async def set_mute(_, m: Message):
+    if not Config.CALL_STATUS:
+        return await m.reply_text("🤖 **Didn't Joined Video Chat !**")
+    if Config.MUTED:
+        return await m.reply_text("🔇 **Already Muted !**")
+    k=await mute()
+    if k:
+        await m.reply_text(f"🔇 **Succesfully Muted !**")
+    else:
+        await m.reply_text("🔇 **Already Muted !**")
+
+@Client.on_message(filters.command(["unmute", f"unmute@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private))
+async def set_unmute(_, m: Message):
+    if not Config.CALL_STATUS:
+        return await m.reply_text("🤖 **Didn't Joined Video Chat !**")
+    if not Config.MUTED:
+        return await m.reply("🔊 **Already Unmuted !**")
+    k=await unmute()
+    if k:
+        await m.reply_text(f"🔊 **Succesfully Unmuted !**")
+    else:
+        await m.reply_text("🔊 **Already Unmuted !**")
+
+
+@Client.on_message(filters.command(["player", f"player@{Config.BOT_USERNAME}"]) & (filters.chat(Config.CHAT_ID) | filters.private))
+async def show_player(client, m: Message):
+    data=Config.DATA.get('FILE_DATA')
+    if not data.get('dur', 0) or \
+        data.get('dur') == 0:
+        title="▶️ <b>Streaming [Live Stream](https://t.me/AsmSafone) !</b>"
+    else:
+        if Config.playlist:
+            title=f"▶️ <b>{Config.playlist[0][1]}</b>"
+        elif Config.STREAM_LINK:
+            title=f"▶️ <b>Streaming [Given URL]({data['file']}) !</b>"
+        else:
+            title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
+    if m.chat.type == "private":
+        await m.reply_text(
+            title,
+            disable_web_page_preview=True,
+            reply_markup=await get_buttons()
+        )
+    else:
+        if Config.msg.get('player') is not None:
+            try:
+                await Config.msg['player'].delete()
+                await Config.msg['player'].reply_to_message.delete()
+            except:
+                pass
+        Config.msg['player'] = await m.reply_text(
+            title,
+            disable_web_page_preview=True,
+            reply_markup=await get_buttons()
+        )
+
+
+@Client.on_message(filters.command(["seek", f"seek@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private))
+async def seek_playout(client, m: Message):
+    if not Config.CALL_STATUS:
+        return await m.reply_text("🤖 **Didn't Joined Video Chat !**")
+    if not (Config.playlist or Config.STREAM_LINK):
+        return await m.reply_text("⚠️ **Startup Stream Can't Be Seeked !**")
+    data=Config.DATA.get('FILE_DATA')
+    if not data.get('dur', 0) or \
+        data.get('dur') == 0:
+        return await m.reply_text("⚠️ **This Stream Can't Be Seeked !**")
+    if ' ' in m.text:
+        i, time = m.text.split(" ")
+        try:
+            time=int(time)
+        except:
+            return await m.reply_text("⛔️ **Invalid Time Specified !**")
+        k, string=await seek_file(time)
+        if k == False:
+            return await m.reply_text(string)
+        if not data.get('dur', 0) or \
+            data.get('dur') == 0:
+            title="▶️ <b>Streaming [Live Stream](https://t.me/AsmSafone) !</b>"
+        else:
+            if Config.playlist:
+                title=f"▶️ <b>{Config.playlist[0][1]}</b>"
+            elif Config.STREAM_LINK:
+                title=f"▶️ <b>Streaming [Given URL]({data['file']}) !</b>"
+            else:
+                title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
+        await m.reply_text(f"{title}", reply_markup=await get_buttons(), disable_web_page_preview=True)
+    else:
+        await m.reply_text("❗ **You Should Specify The Time In Second To Seek!** \n\nFor Example: \n• `/seek 10` to foward 10 sec. \n• `/seek -10` to rewind 10 sec.")

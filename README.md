@@ -34,9 +34,9 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Tele
 
 
 ## Config Vars
-1. `API_ID` : User Account Telegram API_ID, get it from my.telegram.org
-2. `API_HASH` : User Account Telegram API_HASH, get it from my.telegram.org
-3. `BOT_TOKEN` : Your Telegram Bot Token, get it from @Botfather XD
+1. `API_ID` : User Account Telegram API_ID, get it from https://my.telegram.org
+2. `API_HASH` : User Account Telegram API_HASH, get it from https://my.telegram.org
+3. `BOT_TOKEN` : Your Telegram Bot Token, get it from [@Botfather](https://t.me/botfather) XD
 4. `SESSION_STRING` : Pyrogram Session String of User Account, get it from [@genStr robot](http://t.me/genStr_robot) or [![genStr](https://img.shields.io/badge/repl.it-genStr-yellowgreen)](https://repl.it/@AsmSafone/genStr)
 5. `CHAT_ID` : ID of Channel or Group where the bot will stream videos.
 6. `LOG_GROUP` : Group to send Playlist, if CHAT_ID is a Group.
@@ -44,6 +44,8 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Tele
 8. `REPLY_MESSAGE` : A reply to those who message the USER account in PM. Leave it blank if you do not need this feature.
 9. `ADMIN_ONLY` : Pass 'True' If you want to make /play commands only for admins. By default /play is available for all.
 10. `STARTUP_STREAM` : Stream URL of live station or a youtube live video to stream when the bot starts.
+11. `HEROKU_API_KEY`: Your Heroku api key. Get one from [here](https://dashboard.heroku.com/account/applications/authorizations/new)
+12. `HEROKU_APP_NAME`: Name of your Heroku app if deploying to heroku.
 
 ## Requirements
 - Python 3.6 or Higher.
@@ -51,6 +53,21 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Tele
 - [Telegram API key](https://docs.pyrogram.org/intro/quickstart#enjoy-the-api).
 - Pyrogram [String Session](http://t.me/genStr_robot) Of The Account.
 - The User Account Needs To Be An Admin In The Group / Channel.
+
+## Self Host
+```sh
+$ git clone -b alpha https://github.com/AsmSafone/VideoPlayerBot
+$ cd VideoPlayerBot
+$ sudo apt install git curl python3-pip ffmpeg -y
+$ pip3 install -U pip
+$ curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+$ sudo apt install -y nodejs
+$ sudo apt install build-essential
+$ sudo npm install pm2@latest -g
+$ pip3 install -U -r requirements.txt
+# <create .env variables appropriately>
+$ python3 main.py
+```
 
 ## License
 ```sh

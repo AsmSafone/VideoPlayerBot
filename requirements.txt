@@ -1,8 +1,10 @@
+heroku3
 tgcrypto
-py-tgcalls
 youtube_dl
 ffmpeg-python
 python-dotenv
 youtube_search
+py-tgcalls==0.8.0
 youtube_search_python
+wrapt_timeout_decorator
 git+https://github.com/pyrogram/pyrogram@master

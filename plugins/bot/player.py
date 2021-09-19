@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 import os
 import re
+import asyncio
 from config import Config
 from logger import LOGGER
 from datetime import datetime
@@ -26,16 +27,19 @@ from pyrogram.types import Message
 from pyrogram import Client, filters
 from youtube_search import YoutubeSearch
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from utils import download, get_admins, is_admin, get_buttons, get_link, leave_call, play, get_playlist_str, send_playlist, shuffle_playlist, start_stream, stream_from_link
+from utils import delete, download, get_admins, is_admin, get_buttons, get_link, leave_call, play, get_playlist_str, send_playlist, shuffle_playlist, start_stream, stream_from_link
 
 admin_filter=filters.create(is_admin)
+
 
 @Client.on_message(filters.command(["play", f"play@{Config.BOT_USERNAME}"]) & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
 async def add_to_playlist(_, message: Message):
     if Config.ADMIN_ONLY == "True":
         admins = await get_admins(Config.CHAT_ID)
         if message.from_user.id not in admins:
-            await message.reply_sticker("CAACAgUAAxkBAAEBpyZhF4R-ZbS5HUrOxI_MSQ10hQt65QACcAMAApOsoVSPUT5eqj5H0h4E")
+            k=await message.reply_sticker("CAACAgUAAxkBAAEBpyZhF4R-ZbS5HUrOxI_MSQ10hQt65QACcAMAApOsoVSPUT5eqj5H0h4E")
+            await delete(k)
+            await delete(message)
             return
     type=""
     yturl=""
@@ -49,7 +53,7 @@ async def add_to_playlist(_, message: Message):
         m_video = message.reply_to_message.document
         type='video'
         if not "video" in m_video.mime_type:
-            return await msg.edit("🚫 **Invalid Video File !**")
+            return await msg.edit("⛔️ **Invalid Video File Provided !**")
     else:
         if message.reply_to_message:
             link=message.reply_to_message.text
@@ -70,7 +74,9 @@ async def add_to_playlist(_, message: Message):
                 type="query"
                 ysearch=query
         else:
-            await message.reply_text("❗ **Send Me An YouTube Video Name / YouTube Video Link / Reply To Video To Play In Video Chat !**")
+            k=await message.reply_text("❗ __**Send Me An YouTube Video Name / YouTube Video Link / Reply To Video To Play In Video Chat !**__")
+            await delete(k)
+            await delete(message)
             return
     user=f"[{message.from_user.first_name}](tg://user?id={message.from_user.id})"
     if type=="video":
@@ -78,7 +84,7 @@ async def add_to_playlist(_, message: Message):
         nyav = now.strftime("%d-%m-%Y-%H:%M:%S")
         data={1:m_video.file_name, 2:m_video.file_id, 3:"telegram", 4:user, 5:f"{nyav}_{m_video.file_size}"}
         Config.playlist.append(data)
-        await msg.edit("**Media Added To Playlist !**")
+        await msg.edit("➕ **Media Added To Playlist !**")
     if type=="youtube" or type=="query":
         if type=="youtube":
             msg = await message.reply_text("🔎")
@@ -92,7 +98,7 @@ async def add_to_playlist(_, message: Message):
                 title = results[0]["title"][:40]
             except Exception as e:
                 await msg.edit(
-                    "**Literary Found Noting**!\nTry Searching On Inline 😉!"
+                    "**Literary Found Noting !\nTry Searching On Inline Mode 😉!**"
                 )
                 LOGGER.error(str(e))
                 return
@@ -117,12 +123,13 @@ async def add_to_playlist(_, message: Message):
         nyav = now.strftime("%d-%m-%Y-%H:%M:%S")
         data={1:title, 2:url, 3:"youtube", 4:user, 5:f"{nyav}_{message.from_user.id}"}
         Config.playlist.append(data)
-        await msg.edit(f"**[{title}]({url}) Added To Playlist !**", disable_web_page_preview=True)
+        await msg.edit(f"➕ **[{title}]({url}) Added To Playlist !**", disable_web_page_preview=True)
     if len(Config.playlist) == 1:
         m_status = await msg.edit("⚡️")
         await download(Config.playlist[0], m_status)
         await play()
         await m_status.delete()
+        await m_status.reply_to_message.delete()
     else:
         await send_playlist()  
     pl=await get_playlist_str()
@@ -152,7 +159,7 @@ async def shuffle_play_list(client, m: Message):
             await shuffle_playlist()
             
         else:
-            await m.reply_text(f"🚫 **Can't Shuffle Playlist For Less Than 3 Video !**")
+            await m.reply_text(f"⛔️ **Can't Shuffle Playlist For Less Than 3 Video !**")
 
 
 @Client.on_message(filters.command(["clrlist", f"clrlist@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -160,7 +167,7 @@ async def clear_play_list(client, m: Message):
     if not Config.CALL_STATUS:
         return await m.reply_text("🤖 **Didn't Joined Video Chat !**")
     if not Config.playlist:
-        return await m.reply_text("🚫 **Empty Playlist !**")
+        return await m.reply_text("⛔️ **Empty Playlist !**")
     Config.playlist.clear()   
     await m.reply_text(f"✅ **Playlist Cleared !**")
     await start_stream()
@@ -174,25 +181,30 @@ async def stream(client, m: Message):
         text = m.text.split(" ", 1)
         link = text[1]
     else:
-        return await m.reply_text("❗ **Send Me An Live Stream Link / YouTube Live Stream Link To Start Live Streaming !**")
+        return await m.reply_text("❗ __**Send Me An Live Stream Link / YouTube Live Stream Link To Start Live Streaming !**__")
     regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
     match = re.match(regex,link)
     if match:
         stream_link=await get_link(link)
         if not stream_link:
-            return await m.reply_text("🚫 **Invalid Stream Link !**")
+            return await m.reply_text("⛔️ **Invalid Stream Link Provided !**")
     else:
         stream_link=link
+    k, msg=await stream_from_link(stream_link)
+    if k == False:
+        await m.reply_text(msg)
+        return
     await m.reply_text(f"▶️ **Started [Live Streaming]({stream_link}) !**", disable_web_page_preview=True)
-    await stream_from_link(stream_link)
     
 
 
-admincmds=["join", "leave", "pause", "resume", "skip", "restart", "volume", "shuffle", "clrlist", "update", 'replay', 'getlogs', 'stream', f'stream@{Config.BOT_USERNAME}', f'getlogs@{Config.BOT_USERNAME}', f"replay@{Config.BOT_USERNAME}", f"join@{Config.BOT_USERNAME}", f"leave@{Config.BOT_USERNAME}", f"pause@{Config.BOT_USERNAME}", f"resume@{Config.BOT_USERNAME}", f"skip@{Config.BOT_USERNAME}", f"restart@{Config.BOT_USERNAME}", f"volume@{Config.BOT_USERNAME}", f"shuffle@{Config.BOT_USERNAME}", f"clrlist@{Config.BOT_USERNAME}", f"update@{Config.BOT_USERNAME}"]
+admincmds=["join", "leave", "pause", "resume", "skip", "restart", "volume", "shuffle", "clrlist", "update", "replay", "getlogs", "stream", "mute", "unmute", "seek", f"mute@{Config.BOT_USERNAME}", f"unmute@{Config.BOT_USERNAME}", f"seek@{Config.BOT_USERNAME}", f"stream@{Config.BOT_USERNAME}", f"getlogs@{Config.BOT_USERNAME}", f"replay@{Config.BOT_USERNAME}", f"join@{Config.BOT_USERNAME}", f"leave@{Config.BOT_USERNAME}", f"pause@{Config.BOT_USERNAME}", f"resume@{Config.BOT_USERNAME}", f"skip@{Config.BOT_USERNAME}", f"restart@{Config.BOT_USERNAME}", f"volume@{Config.BOT_USERNAME}", f"shuffle@{Config.BOT_USERNAME}", f"clrlist@{Config.BOT_USERNAME}", f"update@{Config.BOT_USERNAME}"]
 
 @Client.on_message(filters.command(admincmds) & ~admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
 async def notforu(_, m: Message):
-    await _.send_cached_media(chat_id=m.chat.id, file_id="CAACAgUAAxkBAAEB1GNhO2oHEh2OqrpucczIprmOIEKZtQACfwMAAjSe9DFG-UktB_TxOh4E", caption="**You Are Not Authorized !!**", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('⚡️ Join Here ⚡️', url='https://t.me/AsmSafone')]]), reply_to_message_id=m.message_id)
+    k=await _.send_cached_media(chat_id=m.chat.id, file_id="CAACAgUAAxkBAAEB1GNhO2oHEh2OqrpucczIprmOIEKZtQACfwMAAjSe9DFG-UktB_TxOh4E", caption="**You Are Not Authorized !!**", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('⚡️ Join Here ⚡️', url='https://t.me/AsmSafone')]]), reply_to_message_id=m.message_id)
+    await delete(k)
+    await delete(m)
 
 allcmd = ["play", "playlist", f"play@{Config.BOT_USERNAME}", f"playlist@{Config.BOT_USERNAME}"] + admincmds
 
