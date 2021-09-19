@@ -29,11 +29,11 @@ User = Client(
 )
 
 
-@User.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited & ~filters.chat([777000, 454000]))
+@User.on_message(filters.private & filters.incoming & ~filters.bot & ~filters.service & ~filters.me & ~filters.edited & ~filters.chat([1202064253, 996634013]))
 async def nopm(client, message):
     if REPLY_MESSAGE is not None:
         try:
-            inline = await client.get_inline_bot_results(USERNAME, "SAF_ONE")
+            inline = await client.get_inline_bot_results(USERNAME, "TharukRenuja")
             await client.send_inline_bot_result(
                 message.chat.id,
                 query_id=inline.query_id,
@@ -42,7 +42,7 @@ async def nopm(client, message):
             )
         except BotInlineDisabled:
             print(f"[WARN] - Inline Mode for @{USERNAME} is not enabled. Enable from @Botfather to enable PM Permit !")
-            await message.reply_text(f"{REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>")
+            await message.reply_text(f"{REPLY_MESSAGE}\n\n<b>© Powered By : \n@SLBotsOfficial | @trtechguide 👑</b>")
         except Exception as e:
             print(e)
             pass
