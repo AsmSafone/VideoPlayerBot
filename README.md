@@ -1,18 +1,18 @@
 # Telegram Video Player Bot [![Mentioned in Awesome](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/tgcalls/awesome-tgcalls)
-![GitHub Repo stars](https://img.shields.io/github/stars/AsmSafone/VideoPlayerBot?color=blue&style=flat)
-![GitHub forks](https://img.shields.io/github/forks/AsmSafone/VideoPlayerBot?color=green&style=flat)
-![GitHub issues](https://img.shields.io/github/issues/AsmSafone/VideoPlayerBot)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/AsmSafone/VideoPlayerBot)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/AsmSafone/VideoPlayerBot)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/AsmSafone/VideoPlayerBot)
-![GitHub contributors](https://img.shields.io/github/contributors/AsmSafone/VideoPlayerBot?style=flat)
-![GitHub repo size](https://img.shields.io/github/repo-size/AsmSafone/VideoPlayerBot?color=red)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/AsmSafone/VideoPlayerBot)
-![GitHub](https://img.shields.io/github/license/AsmSafone/VideoPlayerBot)
-[![Bot Updates](https://img.shields.io/badge/VideoPlayerBot-Updates%20Channel-green)](https://t.me/AsmSafone)
-[![Bot Support](https://img.shields.io/badge/VideoPlayerBot-Support%20Group-blue)](https://t.me/safothebot)
+![GitHub Repo stars](https://img.shields.io/github/stars/TharukRenuja/VideoPlayerBot?color=blue&style=flat)
+![GitHub forks](https://img.shields.io/github/forks/TharukRenuja/VideoPlayerBot?color=green&style=flat)
+![GitHub issues](https://img.shields.io/github/issues/TharukRenuja/VideoPlayerBot)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/TharukRenuja/VideoPlayerBot)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/TharukRenuja/VideoPlayerBot)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/TharukRenuja/VideoPlayerBot)
+![GitHub contributors](https://img.shields.io/github/contributors/TharukRenuja/VideoPlayerBot?style=flat)
+![GitHub repo size](https://img.shields.io/github/repo-size/TharukRenuja/VideoPlayerBot?color=red)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/TharukRenuja/VideoPlayerBot)
+![GitHub](https://img.shields.io/github/license/TharukRenuja/VideoPlayerBot)
+[![Bot Updates](https://img.shields.io/badge/VideoPlayerBot-Updates%20Channel-green)](https://t.me/SLBotsOfficial)
+[![Bot Support](https://img.shields.io/badge/VideoPlayerBot-Support%20Group-blue)](https://t.me/trtechguide)
 
-An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos in Telegram Voice Chat.
+An Telegram Bot By [@TharukRenuja](https://t.me/TharukRenuja) To Stream Videos in Telegram Voice Chat.
 
 ## Main Features
 
@@ -46,7 +46,7 @@ endstream - Stop Streaming & Left VC
 1. `API_ID` : User Account Telegram API_ID, get it from my.telegram.org
 2. `API_HASH` : User Account Telegram API_HASH, get it from my.telegram.org
 3. `BOT_TOKEN` : Your Telegram Bot Token, get it from @Botfather XD
-4. `SESSION_STRING` : Pyrogram Session String of User Account, get it from [@genStr robot](http://t.me/genStr_robot) or [![genStr](https://img.shields.io/badge/repl.it-genStr-yellowgreen)](https://repl.it/@AsmSafone/genStr)
+4. `SESSION_STRING` : Pyrogram Session String of User Account, get it from [@StringSessiongenslbot](http://t.me/StringSessiongenslbot) or [![genStr](https://img.shields.io/badge/repl.it-genStr-yellowgreen)](https://replit.com/@PDTharukRenuja/Pyrogram-String-Session)
 5. `ASSISTANT_NAME` : Your Video Player's assistant username without @.
 6. `SUPPORT_GROUP` : Support Group username without @ [Leave this if you don't have one]
 7. `UPDATES_CHANNEL` : Updates Channel username without @ [Leave this if you don't have one]
@@ -62,7 +62,7 @@ endstream - Stop Streaming & Left VC
 
 ## Self Host
 ```sh
-$ git clone https://github.com/AsmSafone/VideoPlayerBot.git
+$ git clone https://github.com/TharukRenuja/VideoPlayerBot.git
 $ cd VideoPlayerBot
 $ sudo apt-get install python3-pip ffmpeg
 $ pip3 install -U pip
@@ -92,7 +92,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 ## Credits
 
-- [Me](https://github.com/AsmSafone) for [Noting](https://github.com/AsmSafone/VideoPlayerBot) 😬
+- [AsmSafone](https://github.com/AsmSafone) for [Noting](https://github.com/AsmSafone/VideoPlayerBot) 😬
 - [Dan](https://github.com/delivrance) for [Pyrogram](https://github.com/pyrogram/pyrogram) ❤️
 - [MarshalX](https://github.com/MarshalX) for [pytgcalls](https://github.com/MarshalX/tgcalls) ❤️
-- And Thanks To All [Contributors](https://github.com/AsmSafone/VideoPlayerBot/graphs/contributors)! ❤️
+- [Me](https://github.com/TharukRenuja) for Nothing or Modifications🤣.
+- And Thanks To All [Contributors](https://github.com/TharukRenuja/VideoPlayerBot/graphs/contributors)! ❤️
