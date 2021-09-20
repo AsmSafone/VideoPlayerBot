@@ -543,7 +543,7 @@ async def is_admin(_, client, message: Message):
 
 async def get_playlist_str():
     if not Config.playlist:
-        pl = f"▶️ **Started [Startup Stream]({Config.STREAM_URL}) !**"
+        pl = f"▶️ **Streaming [Startup Stream]({Config.STREAM_URL}) !**"
     else:
         if len(Config.playlist)>=25:
             tplaylist=Config.playlist[:25]
@@ -725,11 +725,13 @@ async def update():
 
 
 async def delete(message):
-    await sleep(10)
-    try:
-        await message.delete()
-    except:
-        pass
+    if message.chat.type == "supergroup":
+        await sleep(10)
+        try:
+            await message.delete()
+            await message.reply_to_message.delete()
+        except:
+            pass
 
 
 
