@@ -65,10 +65,14 @@ class Config:
         LOGGER.warning("Reply Message Found, Enabled PM Guard !")
     else:
         REPLY_MESSAGE=None
-    EDIT_TITLE = os.environ.get("EDIT_TITLE", True)
-    if EDIT_TITLE == "False":
+    EDIT_TITLE=os.environ.get("EDIT_TITLE", True)
+    if EDIT_TITLE=="False":
         EDIT_TITLE=None
         LOGGER.warning("VC Title Editing Turned OFF !")
+    IS_NONSTOP_STREAM=os.environ.get("IS_NONSTOP_STREAM", True)
+    if IS_NONSTOP_STREAM=="False":
+        IS_NONSTOP_STREAM=None
+        LOGGER.warning("Nonstop 24x7 Live Stream Disabled !")
 
     # Extra Variables ( For Heroku )
 

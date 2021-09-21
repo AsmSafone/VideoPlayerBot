@@ -36,11 +36,11 @@ async def main():
     await bot.start()
     Config.BOT_USERNAME = (await bot.get_me()).username
     await group_call.start()
-    await start_stream()
     LOGGER.warning(f"{Config.BOT_USERNAME} Started Successfully !")
+    if Config.IS_NONSTOP_STREAM:
+        await start_stream()
     await idle()
     LOGGER.warning("Video Player Bot Stopped !")
-    await group_call.start()
     await bot.stop()
 
 if __name__ == '__main__':

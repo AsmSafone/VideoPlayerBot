@@ -212,7 +212,7 @@ async def stream(client, m: Message):
         s=await m.reply_text(msg)
         await delete(s)
         return
-    s=await m.reply_text(f"▶️ **Started [Live Streaming]({stream_link}) !**", disable_web_page_preview=True, reply_markup=await get_buttons())
+    s=await m.reply_text(f"▶️ **Started [Live Streaming]({stream_link}) !**", disable_web_page_preview=True)
     await delete(s)
 
 

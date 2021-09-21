@@ -38,6 +38,7 @@ HELP_TEXT = """
 
 \u2022 `/start` - start the bot
 \u2022 `/help` - shows the help
+\u2022 `/play` - plays the video
 \u2022 `/playlist` - shows the playlist
 
 🏷️ --**Admins Commands**-- :
@@ -51,7 +52,7 @@ HELP_TEXT = """
 \u2022 `/unmute` - unmute the vc userbot
 \u2022 `/leave` - leave the voice chat
 \u2022 `/shuffle` - shuffle the playlist
-\u2022 `/volume` - change volume (0-200)
+\u2022 `/volume` - change vc volume (0-200)
 \u2022 `/replay` - play from the beginning
 \u2022 `/clrlist` - clear the playlist queue
 \u2022 `/restart` - update & restart the bot

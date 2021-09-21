@@ -66,6 +66,11 @@
       "HEROKU_APP_NAME": {
         "description": "Name of your Heroku app, given in the first blank on this page if deploying to heroku.",
         "required": true
+      },
+      "IS_NONSTOP_STREAM": {
+        "description": "Change it to 'False' If you want to disable nonstop 24x7 live stream feature. By default it is enabled.",
+        "value": "True",
+        "required": false
       }
     },
     "formation": {

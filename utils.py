@@ -74,7 +74,7 @@ async def skip():
     if Config.STREAM_LINK and len(Config.playlist) == 0:
         await stream_from_link()
         return
-    elif not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     old_track = Config.playlist.pop(0)
@@ -85,7 +85,7 @@ async def skip():
         except:
             pass
         del Config.GET_FILE[old_track[5]]
-    if not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     LOGGER.warning(f"START PLAYING: {Config.playlist[0][1]}")
@@ -243,7 +243,7 @@ async def restart():
         await sleep(2)
     except Exception as e:
         LOGGER.error(e)
-    if not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     LOGGER.warning(f"- START PLAYING: {Config.playlist[0][1]}")
@@ -256,7 +256,7 @@ async def restart():
 
 
 async def restart_playout():
-    if not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     LOGGER.warning(f"RESTART PLAYING: {Config.playlist[0][1]}")
@@ -610,7 +610,7 @@ async def progress_bar(current, zero, total, start, msg):
             ''.join(["▰" for i in range(math.floor(percentage / 10))]),
             ''.join(["▱" for i in range(10 - math.floor(percentage / 10))])
             )
-        current_message = f"**Downloading**... {round(percentage, 2)}% \n{progressbar}\n🚀 **Speed**: {humanbytes(speed)}/s\n⬇️ **Downloaded**: {humanbytes(current)} / {humanbytes(total)}\n🕰 **Time Left**: {time_to_complete}"
+        current_message = f"**Downloading**... `{round(percentage, 2)}%` \n`{progressbar}` \n🚀 **Speed**: `{humanbytes(speed)}/s` \n⬇️ **Done**: `{humanbytes(current)}` \n🗄 **Total**: `{humanbytes(total)}` \n⏰ **Time Left**: `{time_to_complete}`"
         if msg:
             try:
                 await msg.edit(text=current_message)
@@ -767,8 +767,11 @@ async def handler(client: PyTgCalls, update: Update):
             Config.STREAM_END["STATUS"]=str(update)
             if Config.STREAM_LINK and len(Config.playlist) == 0:
                 await stream_from_link(Config.STREAM_LINK)
-            elif not Config.playlist:
+            elif Config.IS_NONSTOP_STREAM and not Config.playlist:
                 await start_stream()
+            elif not Config.IS_NONSTOP_STREAM and not Config.playlist:
+                await group_call.leave_group_call(int(Config.CHAT_ID))
+                LOGGER.warning("Nonstop Stream Feature Disabled, So Left VC !")
             else:
                 await skip()          
             await sleep(15) # wait for max 15 sec

@@ -54,6 +54,7 @@ async def skip_track(_, m: Message):
         return
     if len(m.command) == 1:
         await skip()
+        await delete(m)
     else:
         try:
             items = list(dict.fromkeys(m.command[1:]))
