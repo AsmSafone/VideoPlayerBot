@@ -17,11 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 from config import Config
-from logger import LOGGER
+from helpers.log import LOGGER
 from pyrogram import Client, errors
 from youtubesearchpython import VideosSearch
 from pyrogram.handlers import InlineQueryHandler
-from pyrogram.types import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineQueryResultArticle, InlineQueryResultPhoto, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup
 
 buttons = [
             [
@@ -47,9 +47,11 @@ async def search(client, query):
     answers = []
     if query.query == "SAF_ONE":
         answers.append(
-            InlineQueryResultArticle(
+            InlineQueryResultPhoto(
                 title="Deploy Own Video Player Bot",
-                input_message_content=InputTextMessageContent(f"{Config.REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>", disable_web_page_preview=True),
+                thumb_url="https://telegra.ph//file/3ed5eafa4a95960d33980.jpg",
+                photo_url="https://telegra.ph//file/3ed5eafa4a95960d33980.jpg",
+                caption=f"{Config.REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>",
                 reply_markup=InlineKeyboardMarkup(buttons)
                 )
             )

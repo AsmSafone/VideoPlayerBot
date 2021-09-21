@@ -19,8 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 import os
 import re
 import heroku3
-from logger import LOGGER
 from dotenv import load_dotenv
+from helpers.log import LOGGER
 
 load_dotenv()
 
@@ -31,9 +31,10 @@ match = re.match(regex,STREAM)
 if match:
     YSTREAM=True
     finalurl=STREAM
-    LOGGER.warning("YouTube Stream is set as STARTUP STREAM")
+    LOGGER.warning("Starting Startup Stream From YouTube!")
 else:
     finalurl=STREAM
+    LOGGER.warning("Starting Startup Stream From Link!")
 
 class Config:
 
@@ -65,10 +66,15 @@ class Config:
         LOGGER.warning("Reply Message Found, Enabled PM Guard !")
     else:
         REPLY_MESSAGE=None
-    EDIT_TITLE = os.environ.get("EDIT_TITLE", True)
-    if EDIT_TITLE == "False":
+    EDIT_TITLE=os.environ.get("EDIT_TITLE", True)
+    if EDIT_TITLE=="False":
         EDIT_TITLE=None
         LOGGER.warning("VC Title Editing Turned OFF !")
+    IS_NONSTOP_STREAM=os.environ.get("IS_NONSTOP_STREAM", True)
+    if IS_NONSTOP_STREAM=="False":
+        IS_NONSTOP_STREAM=None
+        LOGGER.warning("Nonstop 24x7 Live Stream Disabled !")
+    THUMB_LINK=os.environ.get("THUMB_LINK", "https://telegra.ph//file/3ed5eafa4a95960d33980.jpg")
 
     # Extra Variables ( For Heroku )
 

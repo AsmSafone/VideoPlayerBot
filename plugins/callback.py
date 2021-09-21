@@ -18,12 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 from asyncio import sleep
 from config import Config
-from logger import LOGGER
 from pyrogram import Client
+from helpers.log import LOGGER
 from pyrogram.errors import MessageNotModified
-from plugins.bot.commands import HOME_TEXT, HELP_TEXT
+from plugins.private import HOME_TEXT, HELP_TEXT
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from utils import get_admins, get_buttons, get_playlist_str, mute, pause, restart_playout, resume, seek_file, shuffle_playlist, skip, unmute
+from helpers.utils import get_admins, get_buttons, get_playlist_str, mute, pause, restart_playout, resume, seek_file, shuffle_playlist, skip, unmute
 
 @Client.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
@@ -42,7 +42,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.answer("🔁 Shuffling !", show_alert=True)
         await sleep(1)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
 
@@ -54,19 +54,19 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer("⏸ Paused !", show_alert=True)
             await sleep(1)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
     
     elif query.data.lower() == "resume":   
         if not Config.PAUSE:
-            await query.answer("▶️ Already Resumed !", show_alert=True)
+            await query.answer("▶️ Already Playing !", show_alert=True)
         else:
             await resume()
             await query.answer("▶️ Resumed !", show_alert=True)
             await sleep(1)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
 
@@ -75,17 +75,16 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer("⛔️ Empty Playlist !", show_alert=True)
         else:
             await skip()
-            await query.answer("⏭ Skipped !", show_alert=True)
+            await query.answer("⏩ Skipped !", show_alert=True)
             await sleep(1)
         if Config.playlist:
             title=f"▶️ <b>{Config.playlist[0][1]}</b>"
         elif Config.STREAM_LINK:
-            title=f"▶️ <b>Streaming [Given URL]({Config.DATA['FILE_DATA']['file']}) !</b>"
+            title=f"▶️ <b>Streaming [Stream Link]({Config.DATA['FILE_DATA']['file']}) !</b>"
         else:
             title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
         try:
-            await query.message.edit(f"{title}",
-                disable_web_page_preview=True,
+            await query.message.edit_message_text(f"{title}",
                 reply_markup=await get_buttons()
             )
         except MessageNotModified:
@@ -99,7 +98,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer("🔂 Replaying !", show_alert=True)
             await sleep(1)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
 
@@ -112,7 +111,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer("🔇 Muted !", show_alert=True)
         await sleep(1)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
 
@@ -129,7 +128,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if k == False:
             return await query.answer(reply, show_alert=True)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
 
@@ -146,12 +145,15 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if k == False:
             return await query.answer(reply, show_alert=True)
         try:
-            await query.message.edit_reply_markup(reply_markup=await get_buttons())
+            await query.edit_message_reply_markup(reply_markup=await get_buttons())
         except MessageNotModified:
             pass
 
     elif query.data.lower() == "help":
         buttons = [
+            [
+                InlineKeyboardButton("SEARCH VIDEOS", switch_inline_query_current_chat=""),
+            ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
                 InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
@@ -167,7 +169,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             ]
         reply_markup = InlineKeyboardMarkup(buttons)
         try:
-            await query.message.edit(
+            await query.edit_message_text(
                 HELP_TEXT,
                 reply_markup=reply_markup
             )
@@ -177,7 +179,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data.lower() == "home":
         buttons = [
             [
-                InlineKeyboardButton("SEARCH INLINE", switch_inline_query_current_chat=""),
+                InlineKeyboardButton("SEARCH VIDEOS", switch_inline_query_current_chat=""),
             ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
@@ -193,7 +195,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             ]
         reply_markup = InlineKeyboardMarkup(buttons)
         try:
-            await query.message.edit(
+            await query.edit_message_text(
                 HOME_TEXT.format(query.from_user.first_name, query.from_user.id),
                 reply_markup=reply_markup
             )

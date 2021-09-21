@@ -20,14 +20,14 @@ import os
 import re
 import asyncio
 from config import Config
-from logger import LOGGER
 from datetime import datetime
+from helpers.log import LOGGER
 from youtube_dl import YoutubeDL
 from pyrogram.types import Message
 from pyrogram import Client, filters
 from youtube_search import YoutubeSearch
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from utils import delete, download, get_admins, is_admin, get_buttons, get_link, leave_call, play, get_playlist_str, send_playlist, shuffle_playlist, start_stream, stream_from_link
+from helpers.utils import delete, download, get_admins, is_admin, get_buttons, get_link, leave_call, play, get_playlist_str, send_playlist, shuffle_playlist, start_stream, stream_from_link
 
 admin_filter=filters.create(is_admin)
 
@@ -137,9 +137,9 @@ async def add_to_playlist(_, message: Message):
         await delete(msg)
     pl=await get_playlist_str()
     if message.chat.type == "private":
-        await message.reply_text(pl, reply_markup=await get_buttons() ,disable_web_page_preview=True)        
+        await message.reply_photo(photo=Config.THUMB_LINK, caption=pl, reply_markup=await get_buttons())
     elif not Config.LOG_GROUP and message.chat.type == "supergroup":
-        await message.reply_text(pl, disable_web_page_preview=True, reply_markup=await get_buttons())          
+        await message.reply_photo(photo=Config.THUMB_LINK, caption=pl, reply_markup=await get_buttons())
     for track in Config.playlist[:2]:
         await download(track)
 
@@ -212,7 +212,7 @@ async def stream(client, m: Message):
         s=await m.reply_text(msg)
         await delete(s)
         return
-    s=await m.reply_text(f"▶️ **Started [Live Streaming]({stream_link}) !**", disable_web_page_preview=True, reply_markup=await get_buttons())
+    s=await m.reply_text(f"▶️ **Started [Live Streaming]({stream_link}) !**", disable_web_page_preview=True)
     await delete(s)
 
 
@@ -223,7 +223,7 @@ async def notforu(_, m: Message):
     k=await _.send_cached_media(chat_id=m.chat.id, file_id="CAACAgUAAxkBAAEB1GNhO2oHEh2OqrpucczIprmOIEKZtQACfwMAAjSe9DFG-UktB_TxOh4E", caption="**You Are Not Authorized !!**", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('⚡️ Join Here ⚡️', url='https://t.me/AsmSafone')]]), reply_to_message_id=m.message_id)
     await delete(k)
 
-allcmd = ["play", "playlist", f"play@{Config.BOT_USERNAME}", f"playlist@{Config.BOT_USERNAME}"] + admincmds
+allcmd = ["play", "current", "playlist", f"play@{Config.BOT_USERNAME}", f"current@{Config.BOT_USERNAME}", f"playlist@{Config.BOT_USERNAME}"] + admincmds
 
 @Client.on_message(filters.command(allcmd) & filters.group & ~(filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
 async def not_chat(_, m: Message):

@@ -17,15 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
 from config import Config
-from logger import LOGGER
 from pyrogram import Client
 from pytgcalls import PyTgCalls
+from helpers.log import LOGGER
 
 USER = Client(
     Config.SESSION,
     Config.API_ID,
     Config.API_HASH,
-    plugins=dict(root="plugins.userbot")
+    plugins=dict(root="assets")
     )
 group_call = PyTgCalls(USER, cache_duration=180)
 

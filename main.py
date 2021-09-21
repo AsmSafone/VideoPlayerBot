@@ -19,11 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 import os
 import asyncio
 from bot import bot
-from pyrogram import idle
 from config import Config
-from logger import LOGGER
-from user import group_call
-from utils import start_stream
+from pyrogram import idle
+from helpers.log import LOGGER
+from helpers.utils import start_stream
+from assets.user import group_call, USER
+from pyrogram.errors import UserAlreadyParticipant
 
 
 if not os.path.isdir("./downloads"):
@@ -36,11 +37,18 @@ async def main():
     await bot.start()
     Config.BOT_USERNAME = (await bot.get_me()).username
     await group_call.start()
-    await start_stream()
     LOGGER.warning(f"{Config.BOT_USERNAME} Started Successfully !")
+    if Config.IS_NONSTOP_STREAM:
+        await start_stream()
+    try:
+        await USER.join_chat("AsmSafone")
+    except UserAlreadyParticipant:
+        pass
+    except Exception as e:
+        print(e)
+        pass
     await idle()
     LOGGER.warning("Video Player Bot Stopped !")
-    await group_call.start()
     await bot.stop()
 
 if __name__ == '__main__':

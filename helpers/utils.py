@@ -29,14 +29,14 @@ from bot import bot
 from config import Config
 from asyncio import sleep
 from signal import SIGINT
-from logger import LOGGER
 from threading import Thread
 from datetime import datetime
+from helpers.log import LOGGER
 from pytgcalls import PyTgCalls
 from pytgcalls import StreamType
 from youtube_dl import YoutubeDL
-from user import group_call, USER
 from pytgcalls.types import Update
+from assets.user import group_call, USER
 from wrapt_timeout_decorator import timeout
 from pyrogram.raw.types import InputChannel
 from concurrent.futures import CancelledError
@@ -74,7 +74,7 @@ async def skip():
     if Config.STREAM_LINK and len(Config.playlist) == 0:
         await stream_from_link()
         return
-    elif not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     old_track = Config.playlist.pop(0)
@@ -85,7 +85,7 @@ async def skip():
         except:
             pass
         del Config.GET_FILE[old_track[5]]
-    if not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     LOGGER.warning(f"START PLAYING: {Config.playlist[0][1]}")
@@ -243,7 +243,7 @@ async def restart():
         await sleep(2)
     except Exception as e:
         LOGGER.error(e)
-    if not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     LOGGER.warning(f"- START PLAYING: {Config.playlist[0][1]}")
@@ -256,7 +256,7 @@ async def restart():
 
 
 async def restart_playout():
-    if not Config.playlist:
+    if Config.IS_NONSTOP_STREAM and not Config.playlist:
         await start_stream()
         return
     LOGGER.warning(f"RESTART PLAYING: {Config.playlist[0][1]}")
@@ -288,7 +288,7 @@ async def start_stream():
 async def stream_from_link(link):
     raw_audio, raw_video, width, height = await get_raw_files(link)
     if not raw_audio:
-        return False, "❌ **Unable To Obtain Sufficient Information From The Given URL !**"
+        return False, "❌ **Invalid Stream Link Provided !**"
     if Config.playlist:
         Config.playlist.clear()
     Config.STREAM_LINK=link
@@ -439,11 +439,11 @@ async def send_playlist():
 
 
 async def send_text(text):
-    message = await bot.send_message(
-        Config.LOG_GROUP,
-        text,
+    message = await bot.send_photo(
+        chat_id=Config.LOG_GROUP,
+        photo=Config.THUMB_LINK,
+        caption=text,
         reply_markup=await get_buttons(),
-        disable_web_page_preview=True,
         disable_notification=True
     )
     return message
@@ -570,8 +570,9 @@ async def get_buttons():
                     InlineKeyboardButton(f"{get_player_string()}", callback_data="player"),
                 ],
                 [
+                    InlineKeyboardButton("▶️", callback_data="resume"),
                     InlineKeyboardButton(f"{'🔇' if Config.MUTED else '🔊'}", callback_data="mute"),
-                    InlineKeyboardButton(f"⏯", callback_data=f"{get_pause(Config.PAUSE)}"),
+                    InlineKeyboardButton("⏸", callback_data="pause"),
                 ],
             ]
             )
@@ -583,11 +584,12 @@ async def get_buttons():
                 ],
                 [
                     InlineKeyboardButton("⏮", callback_data="rewind"),
-                    InlineKeyboardButton(f"⏯", callback_data=f"{get_pause(Config.PAUSE)}"),
+                    InlineKeyboardButton("▶️", callback_data="resume"),
+                    InlineKeyboardButton("⏸", callback_data="pause"),
                     InlineKeyboardButton("⏭", callback_data="seek"),
                 ],
                 [
-                    InlineKeyboardButton("🔁", callback_data="shuffle"),
+                    InlineKeyboardButton("🔀", callback_data="shuffle"),
                     InlineKeyboardButton(f"{'🔇' if Config.MUTED else '🔊'}", callback_data="mute"),
                     InlineKeyboardButton("⏩", callback_data="skip"),
                     InlineKeyboardButton("🔂", callback_data="replay"),
@@ -610,7 +612,7 @@ async def progress_bar(current, zero, total, start, msg):
             ''.join(["▰" for i in range(math.floor(percentage / 10))]),
             ''.join(["▱" for i in range(10 - math.floor(percentage / 10))])
             )
-        current_message = f"**Downloading**... {round(percentage, 2)}% \n{progressbar}\n🚀 **Speed**: {humanbytes(speed)}/s\n⬇️ **Downloaded**: {humanbytes(current)} / {humanbytes(total)}\n🕰 **Time Left**: {time_to_complete}"
+        current_message = f"**Downloading...** `{round(percentage, 2)}%`\n`{progressbar}`\n**Done**: `{humanbytes(current)}` | **Total**: `{humanbytes(total)}`\n**Speed**: `{humanbytes(speed)}/s` | **ETA**: `{time_to_complete}`"
         if msg:
             try:
                 await msg.edit(text=current_message)
@@ -675,7 +677,7 @@ def get_player_string():
             ''.join(["━" for i in range(math.floor(percentage / 10))]),
             ''.join(["─" for i in range(10 - math.floor(percentage / 10))])
             )
-    finaal=f"{convert(played)}   {progressbar}    {convert(dur)}"
+    finaal=f"{convert(played)}  {progressbar}  {convert(dur)}"
     return finaal
 
 
@@ -699,12 +701,6 @@ def convert(seconds):
     minutes = seconds // 60
     seconds %= 60      
     return "%d:%02d:%02d" % (hour, minutes, seconds)
-
-def get_pause(status):
-    if status == True:
-        return "Resume"
-    else:
-        return "Pause"
 
 
 def stop_and_restart():
@@ -767,8 +763,11 @@ async def handler(client: PyTgCalls, update: Update):
             Config.STREAM_END["STATUS"]=str(update)
             if Config.STREAM_LINK and len(Config.playlist) == 0:
                 await stream_from_link(Config.STREAM_LINK)
-            elif not Config.playlist:
+            elif Config.IS_NONSTOP_STREAM and not Config.playlist:
                 await start_stream()
+            elif not Config.IS_NONSTOP_STREAM and not Config.playlist:
+                await leave_call()
+                LOGGER.warning("Nonstop Stream Feature Disabled, So Left VC !")
             else:
                 await skip()          
             await sleep(15) # wait for max 15 sec

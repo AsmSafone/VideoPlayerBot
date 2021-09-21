@@ -16,11 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
+import asyncio
 from config import Config
-from logger import LOGGER
+from helpers.log import LOGGER
 from pyrogram.types import Message
 from pyrogram import Client, filters
-from utils import delete, get_playlist_str, is_admin, mute, restart_playout, skip, pause, resume, unmute, volume, get_buttons, is_admin, seek_file, get_player_string
+from helpers.utils import delete, get_playlist_str, is_admin, mute, restart_playout, skip, pause, resume, unmute, volume, get_buttons, is_admin, seek_file, get_player_string
 
 admin_filter=filters.create(is_admin)
 
@@ -37,13 +38,13 @@ async def c_playlist(client, message):
         if Config.msg.get('playlist') is not None:
             try:
                 await Config.msg['playlist'].delete()
-                await Config.msg['playlist'].reply_to_message.delete()
             except:
                 pass
         Config.msg['playlist'] = await message.reply_text(
             pl,
             disable_web_page_preview=True,
         )
+    await delete(message)
 
 
 @Client.on_message(filters.command(["skip", f"skip@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -54,6 +55,7 @@ async def skip_track(_, m: Message):
         return
     if len(m.command) == 1:
         await skip()
+        await delete(m)
     else:
         try:
             items = list(dict.fromkeys(m.command[1:]))
@@ -72,9 +74,9 @@ async def skip_track(_, m: Message):
             await delete(k)
     pl=await get_playlist_str()
     if m.chat.type == "private":
-        await m.reply_text(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
+        await m.reply_photo(photo=Config.THUMB_LINK, caption=pl, reply_markup=await get_buttons())
     elif not Config.LOG_GROUP and m.chat.type == "supergroup":
-        await m.reply_text(pl, disable_web_page_preview=True, reply_markup=await get_buttons())
+        await m.reply_photo(photo=Config.THUMB_LINK, caption=pl, reply_markup=await get_buttons())
 
 
 @Client.on_message(filters.command(["pause", f"pause@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -95,7 +97,7 @@ async def pause_playing(_, m: Message):
 @Client.on_message(filters.command(["resume", f"resume@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
 async def resume_playing(_, m: Message):
     if not Config.PAUSE:
-        k=await m.reply_text("▶️ **Already Resumed !**")
+        k=await m.reply_text("▶️ **Already Playing !**")
         await delete(k)
         return
     if not Config.CALL_STATUS:
@@ -170,8 +172,8 @@ async def set_unmute(_, m: Message):
         await delete(s)
 
 
-@Client.on_message(filters.command(["player", f"player@{Config.BOT_USERNAME}"]) & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
-async def show_player(client, m: Message):
+@Client.on_message(filters.command(["current", f"current@{Config.BOT_USERNAME}"]) & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
+async def show_current(client, m: Message):
     data=Config.DATA.get('FILE_DATA')
     if not data.get('dur', 0) or \
         data.get('dur') == 0:
@@ -180,27 +182,27 @@ async def show_player(client, m: Message):
         if Config.playlist:
             title=f"▶️ <b>{Config.playlist[0][1]}</b>"
         elif Config.STREAM_LINK:
-            title=f"▶️ <b>Streaming [Given URL]({data['file']}) !</b>"
+            title=f"▶️ <b>Streaming [Stream Link]({data['file']}) !</b>"
         else:
             title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
     if m.chat.type == "private":
-        await m.reply_text(
-            title,
-            disable_web_page_preview=True,
+        await m.reply_photo(
+            photo=Config.THUMB_LINK,
+            caption=title,
             reply_markup=await get_buttons()
         )
     else:
-        if Config.msg.get('player') is not None:
+        if Config.msg.get('current') is not None:
             try:
-                await Config.msg['player'].delete()
-                await Config.msg['player'].reply_to_message.delete()
+                await Config.msg['current'].delete()
             except:
                 pass
-        Config.msg['player'] = await m.reply_text(
-            title,
-            disable_web_page_preview=True,
+        Config.msg['current'] = await m.reply_photo(
+            photo=Config.THUMB_LINK,
+            caption=title,
             reply_markup=await get_buttons()
         )
+    await delete(m)
 
 
 @Client.on_message(filters.command(["seek", f"seek@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -239,7 +241,7 @@ async def seek_playout(client, m: Message):
             if Config.playlist:
                 title=f"▶️ <b>{Config.playlist[0][1]}</b>"
             elif Config.STREAM_LINK:
-                title=f"▶️ <b>Streaming [Given URL]({data['file']}) !</b>"
+                title=f"▶️ <b>Streaming [Stream Link]({data['file']}) !</b>"
             else:
                 title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
         s=await m.reply_text(f"{title}", reply_markup=await get_buttons(), disable_web_page_preview=True)

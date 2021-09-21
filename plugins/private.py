@@ -20,27 +20,28 @@ import os
 import sys
 import asyncio
 from config import Config
-from logger import LOGGER
-from utils import update, is_admin
+from helpers.log import LOGGER
 from pyrogram import Client, filters
+from helpers.utils import delete, update, is_admin
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaDocument
 
 
 HOME_TEXT = "👋🏻 **Hi [{}](tg://user?id={})**, \n\nI'm **Video Player Bot**. \nI Can Stream Lives, YouTube Videos & Telegram Video Files On Voice Chat Of Telegram Channels & Groups 😉! \n\n**Made With ❤️ By @ImSafone!** 👑"
 HELP_TEXT = """
-🏷️ --**Setting Up**-- :
+💡 --**Setting Up**--:
 
 \u2022 Add the bot and user account in your group with admin rights.
 \u2022 Start a voice chat in your group & restart the bot if not joined to vc.
 \u2022 Use /play [video name] or use /play as a reply to an video file or youtube link.
 
-🏷️ --**Common Commands**-- :
+💡 --**Common Commands**--:
 
 \u2022 `/start` - start the bot
 \u2022 `/help` - shows the help
+\u2022 `/current` - show current track
 \u2022 `/playlist` - shows the playlist
 
-🏷️ --**Admins Commands**-- :
+💡 --**Admins Commands**--:
 
 \u2022 `/seek` - seek the video
 \u2022 `/skip` - skip current video
@@ -51,7 +52,7 @@ HELP_TEXT = """
 \u2022 `/unmute` - unmute the vc userbot
 \u2022 `/leave` - leave the voice chat
 \u2022 `/shuffle` - shuffle the playlist
-\u2022 `/volume` - change volume (0-200)
+\u2022 `/volume` - change vc volume (0-200)
 \u2022 `/replay` - play from the beginning
 \u2022 `/clrlist` - clear the playlist queue
 \u2022 `/restart` - update & restart the bot
@@ -68,7 +69,7 @@ admin_filter=filters.create(is_admin)
 async def start(client, message):
     buttons = [
             [
-                InlineKeyboardButton("SEARCH INLINE", switch_inline_query_current_chat=""),
+                InlineKeyboardButton("SEARCH VIDEOS", switch_inline_query_current_chat=""),
             ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
@@ -83,12 +84,16 @@ async def start(client, message):
             ]
             ]
     reply_markup = InlineKeyboardMarkup(buttons)
-    await message.reply_text(HOME_TEXT.format(message.from_user.first_name, message.from_user.id), reply_markup=reply_markup)
+    m=await message.reply_photo(photo=Config.THUMB_LINK, caption=HOME_TEXT.format(message.from_user.first_name, message.from_user.id), reply_markup=reply_markup)
+    await delete(m)
 
 
 @Client.on_message(filters.command(["help", f"help@{Config.BOT_USERNAME}"]))
 async def show_help(client, message):
     buttons = [
+            [
+                InlineKeyboardButton("SEARCH VIDEOS", switch_inline_query_current_chat=""),
+            ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
                 InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
@@ -104,22 +109,26 @@ async def show_help(client, message):
             ]
     reply_markup = InlineKeyboardMarkup(buttons)
     if Config.msg.get('help') is not None:
-        await Config.msg['help'].delete()
-    Config.msg['help'] = await message.reply_text(
-        HELP_TEXT,
-        reply_markup=reply_markup
-        )
+        try:
+            await Config.msg['help'].delete()
+        except:
+            pass
+    Config.msg['help'] = await message.reply_photo(photo=Config.THUMB_LINK, caption=HELP_TEXT, reply_markup=reply_markup)
+    await delete(message)
 
 
 @Client.on_message(filters.command(["restart", "update", f"restart@{Config.BOT_USERNAME}", f"update@{Config.BOT_USERNAME}"]) & admin_filter)
 async def update_handler(client, message):
+    k=await message.reply_text("🔄 **Checking ...**")
+    await asyncio.sleep(3)
     if Config.HEROKU_APP:
-        k=await message.reply_text("🔄 **Heroku Detected, \nRestarting App To Update!**")
+        await k.edit("🔄 **Heroku Detected, \nRestarting App To Update!**")
     else:
-        k=await message.reply_text("🔄 **Restarting ...**")
+        await k.edit("🔄 **Restarting, Please Wait...**")
     await update()
     try:
-        await k.edit("✅ **Restarted Successfully! \nJoin @AsmSafone For More!**")
+        await k.edit("✅ **Restarted Successfully! \nJoin @AsmSafone For Update!**")
+        await k.reply_to_message.delete()
     except:
         pass
 
@@ -134,26 +143,32 @@ async def get_logs(client, message):
     if logs:
         try:
             await message.reply_media_group(logs)
+            await delete(message)
         except:
-            await message.reply_text("❌ **An Error Occoured !**")
+            m=await message.reply_text("❌ **An Error Occoured !**")
+            await delete(m)
             pass
         logs.clear()
     else:
-        await message.reply_text("❌ **No Log Files Found !**")
+        m=await message.reply_text("❌ **No Log Files Found !**")
+        await delete(m)
 
 
 @Client.on_message(filters.command(["setvar", f"setvar@{Config.BOT_USERNAME}"]) & admin_filter)
 async def set_heroku_var(client, message):
     if not Config.HEROKU_APP:
         buttons = [[InlineKeyboardButton('HEROKU_API_KEY', url='https://dashboard.heroku.com/account/applications/authorizations/new')]]
-        await message.reply_text(
+        k=await message.reply_text(
             text="❗ **No Heroku App Found !** \n__Please Note That, This Command Needs The Following Heroku Vars To Be Set :__ \n\n1. `HEROKU_API_KEY` : Your heroku account api key.\n2. `HEROKU_APP_NAME` : Your heroku app name. \n\n**For More Ask In @SafoTheBot !!**", 
             reply_markup=InlineKeyboardMarkup(buttons))
+        await delete(k)
         return     
     if " " in message.text:
         cmd, env = message.text.split(" ", 1)
         if  not "=" in env:
-            return await message.reply_text("❗ **You Should Specify The Value For Variable!** \n\nFor Example: \n`/setvar CHAT_ID=-1001313215676`")
+            k=await message.reply_text("❗ **You Should Specify The Value For Variable!** \n\nFor Example: \n`/setvar CHAT_ID=-1001313215676`")
+            await delete(k)
+            return
         var, value = env.split("=", 2)
         config = Config.HEROKU_APP.config()
         if not value:
@@ -173,5 +188,7 @@ async def set_heroku_var(client, message):
         await asyncio.sleep(2)
         await m.edit(f"✅ **Succesfully Set Variable `{var}` With Value `{value}`, Now Restarting To Apply Changes !**")
         config[var] = str(value)
+        await delete(m)
     else:
-        await message.reply_text("❗ **You Haven't Provided Any Variable, You Should Follow The Correct Format !** \n\nFor Example: \n• `/setvar CHAT_ID=-1001313215676` to change or set CHAT_ID var. \n• `/setvar REPLY_MESSAGE=` to delete REPLY_MESSAGE var.") 
+        k=await message.reply_text("❗ **You Haven't Provided Any Variable, You Should Follow The Correct Format !** \n\nFor Example: \n• `/setvar CHAT_ID=-1001313215676` to change or set CHAT_ID var. \n• `/setvar REPLY_MESSAGE=` to delete REPLY_MESSAGE var.")
+        await delete(k)
