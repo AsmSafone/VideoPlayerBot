@@ -95,7 +95,7 @@ async def show_help(client, message):
                 InlineKeyboardButton("SUPPORT", url="https://t.me/trooporiginals"),
             ],
             [
-                InlineKeyboardButton("MORE BOTS", url="https://t.me/TroopOriginals"),
+                InlineKeyboardButton("MORE BOTS", url="https://t.me/troopOriginals"),
                 InlineKeyboardButton("SOURCE CODE", url="https://t.me/trooporiginals"),
             ],
             [
