@@ -26,7 +26,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaDocument
 
 
-HOME_TEXT = "👋🏻 **Dhandam Ra Dhootha 🙏 [{}](tg://user?id={})**, \n\nI'm **Video Player Bot**. \nI Can Stream Lives, YouTube Videos & Telegram Video Files On Voice Chat Of Telegram Channels & Groups 😉! \n\n**Made With ❤️ By Vanajakshi** 👑"
+HOME_TEXT = "👋🏻 **Dhandam Ra Dhootha 🙏 [{}](tg://user?id={})**, \n\nI'm **Video Player Bot**. \nI Can Stream Lives, YouTube Videos & Telegram Video Files On Voice Chat Of Telegram Channels & Groups ! \n\n**Made With ❤️ By Vanajakshi** 👑"
 HELP_TEXT = """
 🏷️ --**Setting Up**-- :
 
