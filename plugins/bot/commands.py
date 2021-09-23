@@ -60,7 +60,7 @@ HELP_TEXT = """
 \u2022 `/getlogs` - get the ffmpeg & bot logs
 
 © **Powered By** : 
-**@AsmSafone | @SafoTheBot** 👑
+**@TroopOriginals** 👑
 """
 
 admin_filter=filters.create(is_admin) 
