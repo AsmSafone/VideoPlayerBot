@@ -131,7 +131,7 @@ async def stream(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_video(video, with_audio=True, repeat=False)
             VIDEO_CALL[chat_id] = group_call
-            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming](https://t.me/AsmSafone) In {m.chat.title} !**")
+            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming](https://t.me/HindiTvFlix) In {m.chat.title} !**")
             await msg.delete()
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
@@ -205,7 +205,7 @@ async def endstream(client, m: Message):
         await msg.edit("⏹️ **Stopped Video Streaming !**")
 
     else:
-        await msg.edit("🤖 **Please Start An Stream First !**")
+        await msg.edit("🤖 **Please Start An Stream First ! AND JOIN HERE https://t.me/HindiTvFlix**")
 
 
 # pytgcalls handlers
