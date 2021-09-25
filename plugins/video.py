@@ -45,6 +45,50 @@ ydl = YoutubeDL(ydl_opts)
 group_call = GroupCallFactory(User, GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
 
 
+@Client.on_callback_query(filters.regex("pause_callback"))
+async def pause_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in VIDEO_CALL:
+        text = f"Video streaming paused!!!"
+        await VIDEO_CALL[chat_id].set_video_pause(True)
+    else:
+        text = f"❌ Nothing  is playing right now!!"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+
+@Client.on_callback_query(filters.regex("resume_callback"))
+async def resume_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in VIDEO_CALL:
+        text = f"Resumed video streaming!!!"
+        await VIDEO_CALL[chat_id].set_video_pause(False)
+    else:
+        text = f"Video is already playing or nothing is playing"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+
+
+@Client.on_callback_query(filters.regex("end_callback"))
+async def end_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in VIDEO_CALL:
+        text = f"⏹️Stopped video streaming!!!"
+        await VIDEO_CALL[chat_id].stop()
+        VIDEO_CALL.pop(chat_id)
+    else:
+        text = f"Nothing is playing to stop!!!"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+    await Client.send_message(
+        chat_id=CallbackQuery.message.chat.id,
+        text=f"Streaming was stopped and I left the video chat!"     
+    )
+    await CallbackQuery.message.delete()
+
+
 @Client.on_message(filters.command(["stream", f"stream@{USERNAME}"]) & filters.group & ~filters.edited)
 @authorized_users_only
 async def stream(client, m: Message):
@@ -99,7 +143,33 @@ async def stream(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_video(link, with_audio=True, repeat=False)
             VIDEO_CALL[chat_id] = group_call
-            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming]({query}) In {m.chat.title} !**")
+            await m.reply_photo(
+               photo=thumb, 
+               caption=f"▶️ **Started [Video Streaming]({query}) In {m.chat.title} !**", 
+               reply_markup=InlineKeyboardMarkup(
+               [
+                   [   InlineKeyboardButton(
+                          text="Pause",
+                          callback_data="pause_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="Resume",
+                          callback_data="resume_callback",
+                       ),
+                   ],
+                   [   InlineKeyboardButton(
+                          text="stop❌",
+                          callback_data="end_callback",
+                       ),
+                   ],
+                   [
+                       InlineKeyboardButton(
+                          text="🎬Youtube",
+                          url=f"{query}",
+                       )
+                   ],
+               ]
+               ),)
             await msg.delete()
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
