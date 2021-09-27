@@ -130,7 +130,7 @@ async def add_to_playlist(_, message: Message):
         m_status = await msg.edit("⚡️")
         await download(Config.playlist[0], m_status)
         await m_status.delete()
-        await m_status.reply_to_message.delete()
+        await m_status.reply_to_message
         await play()
     else:
         await send_playlist()
