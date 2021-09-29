@@ -1,4 +1,7 @@
 # Telegram Video Player Bot [![Mentioned in Awesome](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/tgcalls/awesome-tgcalls)
+
+<p align="center"><a href="https://t.me/klimanam"><img src="https://telegra.ph/file/c9e736acd2b53c987b152.jpg" width="300"></a></p>
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/AsmSafone/VideoPlayerBot?color=blue&style=flat)
 ![GitHub forks](https://img.shields.io/github/forks/AsmSafone/VideoPlayerBot?color=green&style=flat)
 ![GitHub issues](https://img.shields.io/github/issues/AsmSafone/VideoPlayerBot)
