@@ -36,5 +36,3 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 logging.getLogger("pytgcalls").setLevel(logging.WARNING)
 
 LOGGER=logging.getLogger(__name__)
-
-

@@ -73,7 +73,7 @@ class Config:
     IS_NONSTOP_STREAM=os.environ.get("IS_NONSTOP_STREAM", True)
     if IS_NONSTOP_STREAM=="False":
         IS_NONSTOP_STREAM=None
-        LOGGER.warning("Nonstop 24x7 Live Stream Disabled !")
+        LOGGER.warning("Nonstop Live Stream Feature Disabled !")
     THUMB_LINK=os.environ.get("THUMB_LINK", "https://telegra.ph//file/3ed5eafa4a95960d33980.jpg")
 
     # Extra Variables ( For Heroku )
@@ -86,7 +86,7 @@ class Config:
     else:
        HEROKU_APP=heroku3.from_key(API_KEY).apps()[APP_NAME]
 
-    # Database Variables ( Don't Touch )
+    # Temp DB Variables ( Don't Touch )
 
     msg = {}
     playlist=[]

@@ -201,22 +201,22 @@ async def change_file(audio, video, width, height):
 
 async def seek_file(seektime):
     if not (Config.playlist or Config.STREAM_LINK):
-        return False, "⛔️ **No Supported Stream Found For Seeeking !**"
+        return False, "⛔️ No Supported Stream Found For Seeeking !"
     play_start=int(float(Config.DUR.get('TIME')))
     if not play_start:
-        return False, "⛔️ **Streaming Not Yet Started !**"
+        return False, "⛔️ Streaming Not Yet Started !"
     else:
         data=Config.DATA.get("FILE_DATA")
         if not data:
-            return False, "⛔️ **No Stream For Seeking !**"        
+            return False, "⛔️ No Stream For Seeking !"        
         played=int(float(time.time())) - int(float(play_start))
         if data.get("dur", 0) == 0:
-            return False, "⛔️ **Seems Like An Live Stream / Startup Stream Is Streaming !**"
+            return False, "⛔️ Seems Like An Live Stream / Startup Stream Is Streaming !"
         total=int(float(data.get("dur", 0)))
         trimend = total - played - int(seektime)
         trimstart = played + int(seektime)
         if trimstart > total:
-            return False, "⛔️ **Seeked Duration Exceeds Maximum Duration Of Video !**"
+            return False, "⛔️ Seeked Duration Exceeds Maximum Duration Of Video !"
         new_play_start=int(play_start) - int(seektime)
         Config.DUR['TIME']=new_play_start
         raw_audio, raw_video, width, height = await get_raw_files(data.get("file"), seek={"start":trimstart, "end":trimend})
@@ -570,9 +570,9 @@ async def get_buttons():
                     InlineKeyboardButton(f"{get_player_string()}", callback_data="player"),
                 ],
                 [
-                    InlineKeyboardButton("▶️", callback_data="resume"),
-                    InlineKeyboardButton(f"{'🔇' if Config.MUTED else '🔊'}", callback_data="mute"),
                     InlineKeyboardButton("⏸", callback_data="pause"),
+                    InlineKeyboardButton(f"{'🔇' if Config.MUTED else '🔊'}", callback_data="mute"),
+                    InlineKeyboardButton("▶️", callback_data="resume"),
                 ],
             ]
             )
@@ -584,8 +584,8 @@ async def get_buttons():
                 ],
                 [
                     InlineKeyboardButton("⏮", callback_data="rewind"),
-                    InlineKeyboardButton("▶️", callback_data="resume"),
                     InlineKeyboardButton("⏸", callback_data="pause"),
+                    InlineKeyboardButton("▶️", callback_data="resume"),
                     InlineKeyboardButton("⏭", callback_data="seek"),
                 ],
                 [
@@ -686,11 +686,11 @@ def TimeFormatter(milliseconds: int) -> str:
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = ((str(days) + " days, ") if days else "") + \
-        ((str(hours) + " hours, ") if hours else "") + \
-        ((str(minutes) + " min, ") if minutes else "") + \
-        ((str(seconds) + " sec, ") if seconds else "") + \
-        ((str(milliseconds) + " millisec, ") if milliseconds else "")
+    tmp = ((str(days) + " Days, ") if days else "") + \
+        ((str(hours) + " Hours, ") if hours else "") + \
+        ((str(minutes) + " Min, ") if minutes else "") + \
+        ((str(seconds) + " Sec, ") if seconds else "") + \
+        ((str(milliseconds) + " MS, ") if milliseconds else "")
     return tmp[:-2]
 
 
@@ -767,7 +767,7 @@ async def handler(client: PyTgCalls, update: Update):
                 await start_stream()
             elif not Config.IS_NONSTOP_STREAM and not Config.playlist:
                 await leave_call()
-                LOGGER.warning("Nonstop Stream Feature Disabled, So Left VC !")
+                LOGGER.warning("Nonstop Stream Feature Disabled, So Leaving VC !")
             else:
                 await skip()          
             await sleep(15) # wait for max 15 sec

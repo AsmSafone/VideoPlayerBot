@@ -28,5 +28,3 @@ USER = Client(
     plugins=dict(root="assets")
     )
 group_call = PyTgCalls(USER, cache_duration=180)
-
-

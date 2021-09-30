@@ -44,7 +44,7 @@ async def c_playlist(client, message):
             pl,
             disable_web_page_preview=True,
         )
-    await delete(message)
+        await delete(message)
 
 
 @Client.on_message(filters.command(["skip", f"skip@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -67,7 +67,7 @@ async def skip_track(_, m: Message):
                     k=await m.reply_text(f"⏭ **Succesfully Skipped !** \n{i}. **{Config.playlist[i][1]}**")
                     await delete(k)
                 else:
-                    k=await m.reply_text(f"❌ **Can't Skip First Two Video - {i} !**")
+                    k=await m.reply_text(f"⛔️ **Can't Skip First Two Video - {i} !**")
                     await delete(k)
         except (ValueError, TypeError):
             k=await m.reply_text("⛔️ **Invalid Input !**")
@@ -202,7 +202,7 @@ async def show_current(client, m: Message):
             caption=title,
             reply_markup=await get_buttons()
         )
-    await delete(m)
+        await delete(m)
 
 
 @Client.on_message(filters.command(["seek", f"seek@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -231,7 +231,7 @@ async def seek_playout(client, m: Message):
             return
         k, string=await seek_file(time)
         if k == False:
-            s=await m.reply_text(string)
+            s=await m.reply_text(f"**{string}**")
             await delete(s)
             return
         if not data.get('dur', 0) or \
