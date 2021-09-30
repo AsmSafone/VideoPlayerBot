@@ -81,8 +81,8 @@ async def add_to_playlist(_, message: Message):
     user=f"[{message.from_user.first_name}](tg://user?id={message.from_user.id})"
     if type=="video":
         now = datetime.now()
-        nyav = now.strftime("%d-%m-%Y-%H:%M:%S")
-        data={1:m_video.file_name, 2:m_video.file_id, 3:"telegram", 4:user, 5:f"{nyav}_{m_video.file_size}"}
+        lel = now.strftime("%d-%m-%Y-%H:%M:%S")
+        data={1:m_video.file_name, 2:m_video.file_id, 3:"telegram", 4:user, 5:f"{lel}_{m_video.file_size}"}
         Config.playlist.append(data)
         await msg.edit("➕ **Media Added To Playlist !**")
     if type=="youtube" or type=="query":
@@ -122,8 +122,8 @@ async def add_to_playlist(_, message: Message):
             return
         title = info["title"]
         now = datetime.now()
-        nyav = now.strftime("%d-%m-%Y-%H:%M:%S")
-        data={1:title, 2:url, 3:"youtube", 4:user, 5:f"{nyav}_{message.from_user.id}"}
+        lel = now.strftime("%d-%m-%Y-%H:%M:%S")
+        data={1:title, 2:url, 3:"youtube", 4:user, 5:f"{lel}_{message.from_user.id}"}
         Config.playlist.append(data)
         await msg.edit(f"➕ **[{title}]({url}) Added To Playlist !**", disable_web_page_preview=True)
     if len(Config.playlist) == 1:

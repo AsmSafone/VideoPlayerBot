@@ -84,7 +84,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         else:
             title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
         try:
-            await query.message.edit_message_text(f"{title}",
+            await query.edit_message_text(f"{title}",
                 reply_markup=await get_buttons()
             )
         except MessageNotModified:
