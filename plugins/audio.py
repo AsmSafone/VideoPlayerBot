@@ -85,6 +85,7 @@ async def play(client, m: Message):
             )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     elif media.audio or media.document:
         await msg.edit("🔄 `Downloading ...`")
@@ -129,6 +130,7 @@ async def play(client, m: Message):
             )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     else:
         await msg.edit(

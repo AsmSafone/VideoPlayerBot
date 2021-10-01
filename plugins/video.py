@@ -179,6 +179,7 @@ async def stream(client, m: Message):
             )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     elif media.video or media.document:
         await msg.edit("🔄 `Downloading ...`")
@@ -231,6 +232,7 @@ async def stream(client, m: Message):
             )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     else:
         await msg.edit(
