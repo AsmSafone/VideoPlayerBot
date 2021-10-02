@@ -33,7 +33,7 @@ from helpers.bot_utils import USERNAME
 from config import AUDIO_CALL, VIDEO_CALL
 from youtubesearchpython import VideosSearch
 from helpers.decorators import authorized_users_only
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
 
 ydl_opts = {
@@ -43,6 +43,60 @@ ydl_opts = {
 }
 ydl = YoutubeDL(ydl_opts)
 group_call = GroupCallFactory(User, GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM).get_group_call()
+
+
+@Client.on_callback_query(filters.regex("pause_callback"))
+async def pause_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in AUDIO_CALL:
+        text = f"⏸ Paused !"
+        await AUDIO_CALL[chat_id].set_audio_pause(True)
+    elif chat_id in VIDEO_CALL:
+        text = f"⏸ Paused !"
+        await VIDEO_CALL[chat_id].set_video_pause(True)
+    else:
+        text = f"❌ Nothing is Playing !"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+
+@Client.on_callback_query(filters.regex("resume_callback"))
+async def resume_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in AUDIO_CALL:
+        text = f"▶️ Resumed !"
+        await AUDIO_CALL[chat_id].set_audio_pause(False)
+    elif chat_id in VIDEO_CALL:
+        text = f"▶️ Resumed !"
+        await VIDEO_CALL[chat_id].set_video_pause(False)
+    else:
+        text = f"❌ Nothing is Playing !"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+
+
+@Client.on_callback_query(filters.regex("end_callback"))
+async def end_callbacc(client, CallbackQuery):
+    chat_id = CallbackQuery.message.chat.id
+    if chat_id in AUDIO_CALL:
+        text = f"⏹️ Stopped !"
+        await AUDIO_CALL[chat_id].stop()
+        AUDIO_CALL.pop(chat_id)
+    elif chat_id in VIDEO_CALL:
+        text = f"⏹️ Stopped !"
+        await VIDEO_CALL[chat_id].stop()
+        VIDEO_CALL.pop(chat_id)
+    else:
+        text = f"❌ Nothing is Playing !"
+    await Client.answer_callback_query(
+        CallbackQuery.id, text, show_alert=True
+    )
+    await Client.send_message(
+        chat_id=CallbackQuery.message.chat.id,
+        text=f"✅ **Streaming Stopped & Left The Video Chat !**"
+    )
+    await CallbackQuery.message.delete()
 
 
 @Client.on_message(filters.command(["stream", f"stream@{USERNAME}"]) & filters.group & ~filters.edited)
@@ -57,6 +111,8 @@ async def stream(client, m: Message):
     elif ' ' in m.text:
         text = m.text.split(' ', 1)
         query = text[1]
+        if not 'http' in query:
+            return await msg.edit("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
         regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
         match = re.match(regex, query)
         if match:
@@ -74,9 +130,9 @@ async def stream(client, m: Message):
                 split = thumbid.split("?")
                 thumb = split[0].strip()
             except Exception as e:
-                await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
+                return await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
                 print(e)
-                return
+
         else:
             await msg.edit("🔄 `Starting Live Video Stream ...`")
             link = query
@@ -99,10 +155,31 @@ async def stream(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_video(link, with_audio=True, repeat=False)
             VIDEO_CALL[chat_id] = group_call
-            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming]({query}) In {m.chat.title} !**")
             await msg.delete()
+            await m.reply_photo(
+               photo=thumb, 
+               caption=f"▶️ **Started [Video Streaming]({query}) In {m.chat.title} !**",
+               reply_markup=InlineKeyboardMarkup(
+               [
+                   [
+                       InlineKeyboardButton(
+                          text="⏸",
+                          callback_data="pause_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="▶️",
+                          callback_data="resume_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="⏹️",
+                          callback_data="end_callback",
+                       ),
+                   ],
+               ]),
+            )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     elif media.video or media.document:
         await msg.edit("🔄 `Downloading ...`")
@@ -131,10 +208,31 @@ async def stream(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_video(video, with_audio=True, repeat=False)
             VIDEO_CALL[chat_id] = group_call
-            await m.reply_photo(photo=thumb, caption=f"▶️ **Started [Video Streaming](https://t.me/SLBotsOfficial) In {m.chat.title} !**")
             await msg.delete()
+            await m.reply_photo(
+               photo=thumb,
+               caption=f"▶️ **Started [Video Streaming](https://t.me/SLBotsOfficial) In {m.chat.title} !**",
+               reply_markup=InlineKeyboardMarkup(
+               [
+                   [
+                       InlineKeyboardButton(
+                          text="⏸",
+                          callback_data="pause_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="▶️",
+                          callback_data="resume_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="⏹️",
+                          callback_data="end_callback",
+                       ),
+                   ],
+               ]),
+            )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     else:
         await msg.edit(
