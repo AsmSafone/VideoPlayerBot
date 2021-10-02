@@ -11,7 +11,7 @@ from helpers.bot_utils import USERNAME
 from config import AUDIO_CALL, VIDEO_CALL
 from plugins.video import ydl, group_call
 from helpers.decorators import authorized_users_only, sudo_users_only
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
 
 @Client.on_message(filters.command(["play", f"play@{USERNAME}"]) & filters.group & ~filters.edited)
@@ -26,6 +26,8 @@ async def play(client, m: Message):
     elif ' ' in m.text:
         text = m.text.split(' ', 1)
         query = text[1]
+        if not 'http' in query:
+            return await msg.edit("❗ __Send Me An Live Stream Link / YouTube Video Link / Reply To An Video To Start Video Streaming!__")
         regex = r"^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+"
         match = re.match(regex, query)
         if match:
@@ -37,9 +39,9 @@ async def play(client, m: Message):
                     ytstreamlink = f['url']
                 link = ytstreamlink
             except Exception as e:
-                await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
+                return await msg.edit(f"❌ **YouTube Download Error !** \n\n`{e}`")
                 print(e)
-                return
+
         else:
             await msg.edit("🔄 `Starting Live Audio Stream ...`")
             link = query
@@ -61,9 +63,29 @@ async def play(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_audio(link, repeat=False)
             AUDIO_CALL[chat_id] = group_call
-            await msg.edit(f"▶️ **Started [Audio Streaming]({query}) In {m.chat.title} !**", disable_web_page_preview=True)
+            await msg.delete()
+            await m.reply_text(f"▶️ **Started [Audio Streaming]({query}) In {m.chat.title} !**",
+               reply_markup=InlineKeyboardMarkup(
+               [
+                   [
+                       InlineKeyboardButton(
+                          text="⏸",
+                          callback_data="pause_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="▶️",
+                          callback_data="resume_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="⏹️",
+                          callback_data="end_callback",
+                       ),
+                   ],
+               ]),
+            )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     elif media.audio or media.document:
         await msg.edit("🔄 `Downloading ...`")
@@ -86,9 +108,29 @@ async def play(client, m: Message):
             await group_call.join(chat_id)
             await group_call.start_audio(audio, repeat=False)
             AUDIO_CALL[chat_id] = group_call
-            await msg.edit(f"▶️ **Started [Audio Streaming](https://t.me/SLBotsOfficial) In {m.chat.title} !**", disable_web_page_preview=True)
+            await msg.delete()
+            await m.reply_text(f"▶️ **Started [Audio Streaming](https://t.me/SLBotsOfficial) In {m.chat.title} !**",
+               reply_markup=InlineKeyboardMarkup(
+               [
+                   [
+                       InlineKeyboardButton(
+                          text="⏸",
+                          callback_data="pause_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="▶️",
+                          callback_data="resume_callback",
+                       ),
+                       InlineKeyboardButton(
+                          text="⏹️",
+                          callback_data="end_callback",
+                       ),
+                   ],
+               ]),
+            )
         except Exception as e:
             await msg.edit(f"❌ **An Error Occoured !** \n\nError: `{e}`")
+            return await group_call.stop()
 
     else:
         await msg.edit(
