@@ -1,8 +1,7 @@
-FROM python:latest
+FROM debian:latest
 
 RUN apt update && apt upgrade -y
-RUN apt install python3-pip -y
-RUN apt install ffmpeg -y
+RUN apt install git python3-pip ffmpeg -y
 
 COPY . /safone
 WORKDIR /safone
