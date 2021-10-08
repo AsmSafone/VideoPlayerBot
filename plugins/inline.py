@@ -29,7 +29,7 @@ buttons = [
             ],
             [
                 InlineKeyboardButton("CHANNEL", url="https://t.me/AsmSafone"),
-                InlineKeyboardButton("SUPPORT", url="https://t.me/SafoTheBot"),
+                InlineKeyboardButton("SUPPORT", url="https://t.me/AsmSupport"),
             ],
             [
                 InlineKeyboardButton("🤖 MAKE YOUR OWN BOT 🤖", url="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot/tree/alpha"),
@@ -51,7 +51,7 @@ async def search(client, query):
                 title="Deploy Own Video Player Bot",
                 thumb_url="https://telegra.ph//file/3ed5eafa4a95960d33980.jpg",
                 photo_url="https://telegra.ph//file/3ed5eafa4a95960d33980.jpg",
-                caption=f"{Config.REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @SafoTheBot 👑</b>",
+                caption=f"{Config.REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @AsmSupport 👑</b>",
                 reply_markup=InlineKeyboardMarkup(buttons)
                 )
             )

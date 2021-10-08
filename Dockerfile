@@ -1,11 +1,11 @@
-# Python Based Docker
-FROM python:latest
+# Debian Based Docker
+FROM debian:latest
 
 # Installing Packages
 RUN apt update && apt upgrade -y
 RUN apt install git curl python3-pip ffmpeg -y
 
-# Updating Pip Packages
+# Installing Pip Packages
 RUN pip3 install -U pip
 
 # Installing NodeJS
