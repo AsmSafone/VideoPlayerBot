@@ -43,7 +43,7 @@
       "SUPPORT_GROUP": {
         "description": "Support Group username without @ [Leave this if you don't have one]",
         "required": false,
-        "value": "SafoTheBot"
+        "value": "AsmSupport"
       },     
       "UPDATES_CHANNEL": {
         "description": "Updates Channel username without @ [Leave this if you don't have one].",
