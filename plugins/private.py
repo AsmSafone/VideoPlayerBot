@@ -60,7 +60,7 @@ HELP_TEXT = """
 \u2022 `/getlogs` - get the ffmpeg & bot logs
 
 © **Powered By** : 
-**@AsmSafone | @SafoTheBot** 👑
+**@AsmSafone | @AsmSupport** 👑
 """
 
 admin_filter=filters.create(is_admin) 
@@ -159,7 +159,7 @@ async def set_heroku_var(client, message):
     if not Config.HEROKU_APP:
         buttons = [[InlineKeyboardButton('HEROKU_API_KEY', url='https://dashboard.heroku.com/account/applications/authorizations/new')]]
         k=await message.reply_text(
-            text="❗ **No Heroku App Found !** \n__Please Note That, This Command Needs The Following Heroku Vars To Be Set :__ \n\n1. `HEROKU_API_KEY` : Your heroku account api key.\n2. `HEROKU_APP_NAME` : Your heroku app name. \n\n**For More Ask In @SafoTheBot !!**", 
+            text="❗ **No Heroku App Found !** \n__Please Note That, This Command Needs The Following Heroku Vars To Be Set :__ \n\n1. `HEROKU_API_KEY` : Your heroku account api key.\n2. `HEROKU_APP_NAME` : Your heroku app name. \n\n**For More Ask In @AsmSupport !!**", 
             reply_markup=InlineKeyboardMarkup(buttons))
         await delete(k)
         return     
