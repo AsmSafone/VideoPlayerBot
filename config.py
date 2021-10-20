@@ -23,6 +23,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 admins = {}
+OLD_PMS = {}
 AUDIO_CALL = {}
 VIDEO_CALL = {}
 API_ID = int(getenv("API_ID", ""))
@@ -34,7 +35,7 @@ UPDATES_CHANNEL = getenv("UPDATES_CHANNEL", "AsmSafone")
 ASSISTANT_NAME = getenv("ASSISTANT_NAME", "MyVideoPlayer")
 SUDO_USERS = list(map(int, getenv("SUDO_USERS").split()))
 REPLY_MESSAGE = getenv("REPLY_MESSAGE", "")
-if REPLY_MESSAGE:
-    REPLY_MESSAGE = REPLY_MESSAGE
-else:
+if not REPLY_MESSAGE:
     REPLY_MESSAGE = None
+else:
+    REPLY_MESSAGE = REPLY_MESSAGE
