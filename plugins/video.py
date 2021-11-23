@@ -183,12 +183,13 @@ async def stream(client, m: Message):
 
     elif media.video or media.document:
         await msg.edit("🔄 `Downloading ...`")
-        if media.video.thumbs:
+        if media.video and media.video.thumbs:
             lol = media.video.thumbs[0]
             lel = await client.download_media(lol['file_id'])
             thumb = lel
         else:
             thumb = "https://telegra.ph/file/62e86d8aadde9a8cbf9c2.jpg"
+
         video = await client.download_media(media)
 
         vid_call = VIDEO_CALL.get(chat_id)
