@@ -27,10 +27,10 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos In Tele
 ## Deploy Own Bot
 
 ### Heroku (The Easiest Way)
-<p><a href="https://heroku.com/deploy?template=https://github.com/AsmSafone/VideoPlayerBot/tree/alpha"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
+<p><a href="https://heroku.com/deploy?template=https://github.com/S1-BOTS/VideoPlayerBot/tree/alpha"><img src="https://img.shields.io/badge/Deploy%20To%20Heroku-blueviolet?style=for-the-badge&logo=heroku" width="200""/></a></p>
 
 ### Railway (At Your Own Risk)
-<p><a href="https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2FAsmSafone%2FVideoPlayerBot%2Ftree%2Falpha&envs=API_ID%2CAPI_HASH%2CBOT_TOKEN%2CSESSION_STRING%2CCHAT_ID%2CLOG_GROUP%2CAUTH_USERS%2CADMIN_ONLY%2CSTARTUP_STREAM%2CREPLY_MESSAGE&optionalEnvs=LOG_GROUP%2CADMIN_ONLY%2CREPLY_MESSAGE&API_IDDesc=Your+Telegram+API_ID+get+it+from+my.telegram.org%2Fapps&API_HASHDesc=Your+Telegram+API_HASH+get+it+from+my.telegram.org%2Fapps&BOT_TOKENDesc=Bot+token+of+your+bot%2C+get+from+%40Botfather&SESSION_STRINGDesc=Session+string%2C+use+%40genStr_robot+to+generate+pyrogram+session+string&CHAT_IDDesc=ID+of+Channel+or+Group+where+the+Bot+plays+Live%2FMusic%2FYouTube+Lives&LOG_GROUPDesc=ID+of+the+group+to+send+playlist+if+CHAT+is+a+Group%2C+if+channel+then+leave+blank&AUTH_USERSDesc=ID+of+Users+who+can+use+Admin+commands+%28for+multiple+users+seperated+by+space%29&ADMIN_ONLYDesc=Change+it+to+%27True%27+If+you+want+to+make+%2Fplay+commands+only+for+admins+of+CHAT.+By+default+%2Fplay+is+available+for+all&STARTUP_STREAMDesc=URL+of+Live+Stream+or+Youtube+Live+video+link+to+stream+with+bootup&REPLY_MESSAGEDesc=A+reply+message+to+those+who+message+the+USER+account+in+PM.+Make+it+blank+if+you+do+not+need+this+feature.&ADMIN_ONLYDefault=False&STREAM_URLDefault=https://youtu.be/36YnV9STBqc&REPLY_MESSAGEDefault=Hello Sir, I'm a bot to stream videos on telegram voice chat, not having time to chat with you 😂!"> <img src="https://img.shields.io/badge/Deploy%20To%20Railway-blueviolet?style=for-the-badge&logo=railway" width="200""/></a></p>
+<p><a href="https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2FS1-BOTS%2FVideoPlayerBot%2Ftree%2Falpha&envs=API_ID%2CAPI_HASH%2CBOT_TOKEN%2CSESSION_STRING%2CCHAT_ID%2CLOG_GROUP%2CAUTH_USERS%2CADMIN_ONLY%2CSTARTUP_STREAM%2CREPLY_MESSAGE&optionalEnvs=LOG_GROUP%2CADMIN_ONLY%2CREPLY_MESSAGE&API_IDDesc=Your+Telegram+API_ID+get+it+from+my.telegram.org%2Fapps&API_HASHDesc=Your+Telegram+API_HASH+get+it+from+my.telegram.org%2Fapps&BOT_TOKENDesc=Bot+token+of+your+bot%2C+get+from+%40Botfather&SESSION_STRINGDesc=Session+string%2C+use+%40genStr_robot+to+generate+pyrogram+session+string&CHAT_IDDesc=ID+of+Channel+or+Group+where+the+Bot+plays+Live%2FMusic%2FYouTube+Lives&LOG_GROUPDesc=ID+of+the+group+to+send+playlist+if+CHAT+is+a+Group%2C+if+channel+then+leave+blank&AUTH_USERSDesc=ID+of+Users+who+can+use+Admin+commands+%28for+multiple+users+seperated+by+space%29&ADMIN_ONLYDesc=Change+it+to+%27True%27+If+you+want+to+make+%2Fplay+commands+only+for+admins+of+CHAT.+By+default+%2Fplay+is+available+for+all&STARTUP_STREAMDesc=URL+of+Live+Stream+or+Youtube+Live+video+link+to+stream+with+bootup&REPLY_MESSAGEDesc=A+reply+message+to+those+who+message+the+USER+account+in+PM.+Make+it+blank+if+you+do+not+need+this+feature.&ADMIN_ONLYDefault=False&STREAM_URLDefault=https://youtu.be/36YnV9STBqc&REPLY_MESSAGEDefault=Hello Sir, I'm a bot to stream videos on telegram voice chat, not having time to chat with you 😂!"> <img src="https://img.shields.io/badge/Deploy%20To%20Railway-blueviolet?style=for-the-badge&logo=railway" width="200""/></a></p>
 
 
 ## Config Vars
@@ -57,7 +57,7 @@ An Telegram Bot By [@AsmSafone](https://t.me/AsmSafone) To Stream Videos In Tele
 
 ## Self Host
 ```sh
-$ git clone -b alpha https://github.com/AsmSafone/VideoPlayerBot
+$ git clone -b alpha https://github.com/S1-BOTS/VideoPlayerBot
 $ cd VideoPlayerBot
 $ sudo apt install git curl python3-pip ffmpeg -y
 $ pip3 install -U pip
