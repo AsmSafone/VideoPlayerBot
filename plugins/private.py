@@ -25,15 +25,15 @@ from config import SUPPORT_GROUP, UPDATES_CHANNEL
 from translations import START_TEXT, HELP_TEXT, ABOUT_TEXT
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 
-@Client.on_message(filters.command(["start", f"start@{USERNAME}"]))
-async def start(client, message):
+@Client.on_message(filters.command(["mbstart", f"mbstart@{USERNAME}"]))
+async def mbstart(client, message):
    buttons = [
             [
                 InlineKeyboardButton("❔ HOW TO USE ME ❔", callback_data="help"),
             ],
             [
                 InlineKeyboardButton("📢 CHANNEL", url=f"https://t.me/{UPDATES_CHANNEL}"),
-                InlineKeyboardButton("SOURCE 📦", url=f"https://github.com/AsmSafone/VideoPlayerBot"),
+                InlineKeyboardButton("Owner", url=f"t.me/Narutoo06"),
             ],
             [
                 InlineKeyboardButton("🤖 ABOUT", callback_data="about"),
