@@ -5,6 +5,6 @@ ffmpeg-python
 python-dotenv
 youtube_search
 py-tgcalls==0.8.0
-youtube_search_python
 wrapt_timeout_decorator
-git+https://github.com/pyrogram/pyrogram@master
+youtube_search_python==1.4.9
+git+https://github.com/AsmSafone/pyrogram@master
