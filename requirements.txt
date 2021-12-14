@@ -1,6 +1,6 @@
 heroku3
 tgcrypto
-youtube_dl
+git+https://github.com/Sorrybabe/downloader
 ffmpeg-python
 python-dotenv
 youtube_search
