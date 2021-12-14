@@ -34,7 +34,7 @@ from datetime import datetime
 from helpers.log import LOGGER
 from pytgcalls import PyTgCalls
 from pytgcalls import StreamType
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from pytgcalls.types import Update
 from assets.user import group_call, USER
 from wrapt_timeout_decorator import timeout
