@@ -22,7 +22,7 @@ import asyncio
 from config import Config
 from datetime import datetime
 from helpers.log import LOGGER
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from pyrogram.types import Message
 from pyrogram import Client, filters
 from youtube_search import YoutubeSearch
