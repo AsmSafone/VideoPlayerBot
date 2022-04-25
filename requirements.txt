@@ -1,10 +1,10 @@
 heroku3
 tgcrypto
-git+https://github.com/Sorrybabe/downloader
 ffmpeg-python
 python-dotenv
 youtube_search
+pyrogram==1.4.16
 py-tgcalls==0.8.0
 wrapt_timeout_decorator
 youtube_search_python==1.4.9
-git+https://github.com/AsmSafone/pyrogram@master
+git+https://github.com/asmsafone/downloader
