@@ -147,7 +147,6 @@ async def get_logs(client, message):
         except:
             m=await message.reply_text("❌ **An Error Occoured !**")
             await delete(m)
-            pass
         logs.clear()
     else:
         m=await message.reply_text("❌ **No Log Files Found !**")
@@ -162,10 +161,10 @@ async def set_heroku_var(client, message):
             text="❗ **No Heroku App Found !** \n__Please Note That, This Command Needs The Following Heroku Vars To Be Set :__ \n\n1. `HEROKU_API_KEY` : Your heroku account api key.\n2. `HEROKU_APP_NAME` : Your heroku app name. \n\n**For More Ask In @AsmSupport !!**", 
             reply_markup=InlineKeyboardMarkup(buttons))
         await delete(k)
-        return     
+        return
     if " " in message.text:
         cmd, env = message.text.split(" ", 1)
-        if  not "=" in env:
+        if "=" not in env:
             k=await message.reply_text("❗ **You Should Specify The Value For Variable!** \n\nFor Example: \n`/setvar CHAT_ID=-1001313215676`")
             await delete(k)
             return
@@ -184,7 +183,10 @@ async def set_heroku_var(client, message):
         if var in config:
             m=await message.reply_text(f"⚠️ **Variable Already Found, So Edited Value To `{value}` !**")
         else:
-            m=await message.reply_text(f"⚠️ **Variable Not Found, So Setting As New Var !**")
+            m = await message.reply_text(
+                "⚠️ **Variable Not Found, So Setting As New Var !**"
+            )
+
         await asyncio.sleep(2)
         await m.edit(f"✅ **Succesfully Set Variable `{var}` With Value `{value}`, Now Restarting To Apply Changes !**")
         config[var] = str(value)

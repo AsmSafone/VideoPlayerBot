@@ -65,10 +65,9 @@ async def skip_track(_, m: Message):
                 if 2 <= i <= (len(Config.playlist) - 1):
                     Config.playlist.pop(i)
                     k=await m.reply_text(f"⏭ **Succesfully Skipped !** \n{i}. **{Config.playlist[i][1]}**")
-                    await delete(k)
                 else:
                     k=await m.reply_text(f"⛔️ **Can't Skip First Two Video - {i} !**")
-                    await delete(k)
+                await delete(k)
         except (ValueError, TypeError):
             k=await m.reply_text("⛔️ **Invalid Input !**")
             await delete(k)
@@ -148,10 +147,10 @@ async def set_mute(_, m: Message):
     k=await mute()
     if k:
         s=await m.reply_text(f"🔇 **Succesfully Muted !**")
-        await delete(s)
     else:
         s=await m.reply_text("🔇 **Already Muted !**")
-        await delete(s)
+
+    await delete(s)
 
 @Client.on_message(filters.command(["unmute", f"unmute@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
 async def set_unmute(_, m: Message):
@@ -166,10 +165,10 @@ async def set_unmute(_, m: Message):
     k=await unmute()
     if k:
         s=await m.reply_text(f"🔊 **Succesfully Unmuted !**")
-        await delete(s)
     else:
         s=await m.reply_text("🔊 **Already Unmuted !**")
-        await delete(s)
+
+    await delete(s)
 
 
 @Client.on_message(filters.command(["current", f"current@{Config.BOT_USERNAME}"]) & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -178,13 +177,12 @@ async def show_current(client, m: Message):
     if not data.get('dur', 0) or \
         data.get('dur') == 0:
         title="▶️ <b>Streaming [Live Stream](https://t.me/AsmSafone) !</b>"
+    elif Config.playlist:
+        title=f"▶️ <b>{Config.playlist[0][1]}</b>"
+    elif Config.STREAM_LINK:
+        title=f"▶️ <b>Streaming [Stream Link]({data['file']}) !</b>"
     else:
-        if Config.playlist:
-            title=f"▶️ <b>{Config.playlist[0][1]}</b>"
-        elif Config.STREAM_LINK:
-            title=f"▶️ <b>Streaming [Stream Link]({data['file']}) !</b>"
-        else:
-            title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
+        title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
     if m.chat.type == "private":
         await m.reply_photo(
             photo=Config.THUMB_LINK,
@@ -211,7 +209,7 @@ async def seek_playout(client, m: Message):
         k=await m.reply_text("🤖 **Didn't Joined Video Chat !**")
         await delete(k)
         return
-    if not (Config.playlist or Config.STREAM_LINK):
+    if not Config.playlist and not Config.STREAM_LINK:
         k=await m.reply_text("⚠️ **Startup Stream Can't Be Seeked !**")
         await delete(k)
         return
@@ -237,15 +235,14 @@ async def seek_playout(client, m: Message):
         if not data.get('dur', 0) or \
             data.get('dur') == 0:
             title="▶️ <b>Streaming [Live Stream](https://t.me/AsmSafone) !</b>"
+        elif Config.playlist:
+            title=f"▶️ <b>{Config.playlist[0][1]}</b>"
+        elif Config.STREAM_LINK:
+            title=f"▶️ <b>Streaming [Stream Link]({data['file']}) !</b>"
         else:
-            if Config.playlist:
-                title=f"▶️ <b>{Config.playlist[0][1]}</b>"
-            elif Config.STREAM_LINK:
-                title=f"▶️ <b>Streaming [Stream Link]({data['file']}) !</b>"
-            else:
-                title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
+            title=f"▶️ <b>Streaming [Startup Stream]({Config.STREAM_URL}) !</b>"
         s=await m.reply_text(f"{title}", reply_markup=await get_buttons(), disable_web_page_preview=True)
-        await delete(s)
     else:
         s=await m.reply_text("❗ **You Should Specify The Time In Second To Seek!** \n\nFor Example: \n• `/seek 10` to foward 10 sec. \n• `/seek -10` to rewind 10 sec.")
-        await delete(s)
+
+    await delete(s)

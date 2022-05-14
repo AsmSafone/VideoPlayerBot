@@ -46,7 +46,6 @@ async def main():
         pass
     except Exception as e:
         print(e)
-        pass
     await idle()
     LOGGER.warning("Video Player Bot Stopped !")
     await bot.stop()

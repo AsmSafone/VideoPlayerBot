@@ -22,10 +22,7 @@ from pyrogram import Client, filters
 from pyrogram.errors import BotInlineDisabled
 
 async def is_reply(_, client, message):
-    if Config.REPLY_MESSAGE:
-        return True
-    else:
-        return False
+    return bool(Config.REPLY_MESSAGE)
 
 reply_filter=filters.create(is_reply)
 
@@ -39,8 +36,7 @@ async def nopm(client, message):
             result_id=inline.results[0].id,
             hide_via=True
             )
-        old=Config.msg.get(message.chat.id)
-        if old:
+        if old := Config.msg.get(message.chat.id):
             await client.delete_messages(message.chat.id, [old["msg"], old["s"]])
         Config.msg[message.chat.id]={"msg":m.updates[1].message.id, "s":message.message_id}
     except BotInlineDisabled:
@@ -48,4 +44,3 @@ async def nopm(client, message):
         await message.reply_text(f"{Config.REPLY_MESSAGE}\n\n<b>© Powered By : \n@AsmSafone | @AsmSupport 👑</b>")
     except Exception as e:
         LOGGER.error(e)
-        pass

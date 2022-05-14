@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>
 """
 
+
 import os
 import re
 import heroku3
@@ -28,13 +29,14 @@ YSTREAM=False
 STREAM=os.environ.get("STARTUP_STREAM", "https://www.youtube.com/watch?v=36YnV9STBqc")
 regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
 match = re.match(regex,STREAM)
+finalurl=STREAM
 if match:
     YSTREAM=True
-    finalurl=STREAM
     LOGGER.warning("Starting Startup Stream From YouTube!")
 else:
-    finalurl=STREAM
     LOGGER.warning("Starting Startup Stream From Link!")
+
+
 
 class Config:
 
@@ -44,14 +46,11 @@ class Config:
     ADMINS = [int(admin) for admin in (ADMIN).split()]
     API_ID = int(os.environ.get("API_ID", ""))
     API_HASH = os.environ.get("API_HASH", "")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")     
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
     SESSION = os.environ.get("SESSION_STRING", "")
     CHAT_ID = int(os.environ.get("CHAT_ID", ""))
 
-    # Optional Variables
-
-    LOG_GROUP=os.environ.get("LOG_GROUP", "")
-    if LOG_GROUP:
+    if LOG_GROUP := os.environ.get("LOG_GROUP", ""):
         LOG_GROUP=int(LOG_GROUP)
     else:
         LOG_GROUP=None
@@ -60,8 +59,7 @@ class Config:
     YSTREAM=YSTREAM
     SHUFFLE=bool(os.environ.get("SHUFFLE", True))
     ADMIN_ONLY=os.environ.get("ADMIN_ONLY", "False")
-    REPLY_MESSAGE=os.environ.get("REPLY_MESSAGE", None)
-    if REPLY_MESSAGE:
+    if REPLY_MESSAGE := os.environ.get("REPLY_MESSAGE", None):
         REPLY_MESSAGE=REPLY_MESSAGE
         LOGGER.warning("Reply Message Found, Enabled PM Guard !")
     else:

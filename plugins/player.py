@@ -46,65 +46,81 @@ async def add_to_playlist(_, message: Message):
     if message.reply_to_message and message.reply_to_message.video:
         msg = await message.reply_text("⚡️")
         type='video'
-        m_video = message.reply_to_message.video       
+        m_video = message.reply_to_message.video
     elif message.reply_to_message and message.reply_to_message.document:
         msg = await message.reply_text("⚡️")
         m_video = message.reply_to_message.document
         type='video'
-        if not "video" in m_video.mime_type:
+        if "video" not in m_video.mime_type:
             k=await msg.edit("⛔️ **Invalid Video File Provided !**")
             await delete(k)
             return
-    else:
-        if message.reply_to_message:
-            link=message.reply_to_message.text
-            regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
-            match = re.match(regex,link)
-            if match:
-                type="youtube"
-                yturl=link
-        elif " " in message.text:
-            text = message.text.split(" ", 1)
-            query = text[1]
-            regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
-            match = re.match(regex,query)
-            if match:
-                type="youtube"
-                yturl=query
-            else:
-                type="query"
-                ysearch=query
+    elif message.reply_to_message:
+        link = message.reply_to_message.text
+        regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
+
+        if match := re.match(regex, link):
+            type="youtube"
+            yturl=link
+    elif " " in message.text:
+        text = message.text.split(" ", 1)
+        query = text[1]
+        regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
+        if match := re.match(regex, query):
+            type="youtube"
+            yturl=query
         else:
-            k=await message.reply_text("❗ __**Send Me An YouTube Video Name / YouTube Video Link / Reply To Video To Play In Telegram Video Chat !**__")
+            type="query"
+            ysearch=query
+    else:
+        k=await message.reply_text("❗ __**Send Me An YouTube Video Name / YouTube Video Link / Reply To Video To Play In Telegram Video Chat !**__")
+        await delete(k)
+        return
+    user=f"[{message.from_user.first_name}](tg://user?id={message.from_user.id})"
+    if type == "query":
+        try:
+            msg = await message.reply_text("🔎")
+            ytquery=ysearch
+            results = YoutubeSearch(ytquery, max_results=1).to_dict()
+            url = f"https://youtube.com{results[0]['url_suffix']}"
+            title = results[0]["title"][:40]
+        except Exception as e:
+            k=await msg.edit(
+                "**Literary Found Noting !\nTry Searching On Inline Mode 😉!**"
+            )
+            LOGGER.error(str(e))
             await delete(k)
             return
-    user=f"[{message.from_user.first_name}](tg://user?id={message.from_user.id})"
-    if type=="video":
+        ydl_opts = {
+            "geo-bypass": True,
+            "nocheckcertificate": True
+        }
+        ydl = YoutubeDL(ydl_opts)
+        try:
+            info = ydl.extract_info(url, False)
+        except Exception as e:
+            LOGGER.error(e)
+            k=await msg.edit(
+                f"❌ **YouTube Download Error !** \n\n{e}"
+                )
+            LOGGER.error(str(e))
+            await delete(k)
+            return
+        title = info["title"]
+        now = datetime.now()
+        lel = now.strftime("%d-%m-%Y-%H:%M:%S")
+        data={1:title, 2:url, 3:"youtube", 4:user, 5:f"{lel}_{message.from_user.id}"}
+        Config.playlist.append(data)
+        await msg.edit(f"➕ **[{title}]({url}) Added To Playlist !**", disable_web_page_preview=True)
+    elif type == "video":
         now = datetime.now()
         lel = now.strftime("%d-%m-%Y-%H:%M:%S")
         data={1:m_video.file_name, 2:m_video.file_id, 3:"telegram", 4:user, 5:f"{lel}_{m_video.file_size}"}
         Config.playlist.append(data)
         await msg.edit("➕ **Media Added To Playlist !**")
-    if type=="youtube" or type=="query":
-        if type=="youtube":
-            msg = await message.reply_text("🔎")
-            url=yturl
-        elif type=="query":
-            try:
-                msg = await message.reply_text("🔎")
-                ytquery=ysearch
-                results = YoutubeSearch(ytquery, max_results=1).to_dict()
-                url = f"https://youtube.com{results[0]['url_suffix']}"
-                title = results[0]["title"][:40]
-            except Exception as e:
-                k=await msg.edit(
-                    "**Literary Found Noting !\nTry Searching On Inline Mode 😉!**"
-                )
-                LOGGER.error(str(e))
-                await delete(k)
-                return
-        else:
-            return
+    elif type == "youtube":
+        msg = await message.reply_text("🔎")
+        url=yturl
         ydl_opts = {
             "geo-bypass": True,
             "nocheckcertificate": True
@@ -159,15 +175,13 @@ async def leave_voice_chat(_, m: Message):
 async def shuffle_play_list(client, m: Message):
     if not Config.CALL_STATUS:
         k=await m.reply_text("🤖 **Didn't Joined Video Chat !**")
-        await delete(k)
+    elif len(Config.playlist) > 2:
+        await shuffle_playlist()
+        k = await m.reply_text("🔄 **Playlist Shuffled !**")
     else:
-        if len(Config.playlist) > 2:
-            await shuffle_playlist()
-            k=await m.reply_text(f"🔄 **Playlist Shuffled !**")
-            await delete(k)
-        else:
-            k=await m.reply_text(f"⛔️ **Can't Shuffle Playlist For Less Than 3 Video !**")
-            await delete(k)
+        k = await m.reply_text("⛔️ **Can't Shuffle Playlist For Less Than 3 Video !**")
+
+    await delete(k)
 
 
 @Client.on_message(filters.command(["clrlist", f"clrlist@{Config.BOT_USERNAME}"]) & admin_filter & (filters.chat(Config.CHAT_ID) | filters.private | filters.chat(Config.LOG_GROUP)))
@@ -180,8 +194,8 @@ async def clear_play_list(client, m: Message):
         k=await m.reply_text("⛔️ **Empty Playlist !**")
         await delete(k)
         return
-    Config.playlist.clear()   
-    k=await m.reply_text(f"✅ **Playlist Cleared !**")
+    Config.playlist.clear()
+    k = await m.reply_text("✅ **Playlist Cleared !**")
     await delete(k)
     await start_stream()
 
@@ -198,8 +212,7 @@ async def stream(client, m: Message):
         await delete(k)
         return
     regex = r"^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?"
-    match = re.match(regex,link)
-    if match:
+    if match := re.match(regex, link):
         stream_link=await get_link(link)
         if not stream_link:
             k=await m.reply_text("⛔️ **Invalid Stream Link Provided !**")
