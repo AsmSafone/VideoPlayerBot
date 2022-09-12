@@ -157,6 +157,6 @@ async def restart(client, m: Message):
     await sleep(3)
     os.execl(sys.executable, sys.executable, *sys.argv)
     try:
-        await k.edit("✅ **Restarted Successfully! \nJoin @AsmSafone For More!**")
+        await k.edit("✅ **Restarted Successfully! \nJoin @BenimHacker For More!**")
     except:
         pass
